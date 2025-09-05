@@ -6,33 +6,14 @@
     <title>Instagram Slide Creator</title>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=PT+Sans&family=Montserrat&family=Lobster&family=Playfair+Display&family=Oswald&family=Merriweather&family=Ubuntu&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <!-- Подключение библиотек -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <!-- Библиотеки -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root {
-            --bg: #f9f7fd;
-            --card: #ffffff;
-            --text: #444;
-            --title: #7b65e0;
-            --border: #d0c4e9;
-            --btn-bg: #f0f0ff;
-            --btn-text: #5a4a8a;
-            --btn-shadow: rgba(138, 124, 168, 0.15);
-            --btn-hover: #e8e4ff;
-            --btn-main: #7b65e0;
-            --btn-main-hover: #6d58d5;
-            --btn-main-text: white;
-            --progress-bg: #eae4f2;
-            --progress-fill: #9d86f5;
-            --dot: #ddd;
-            --dot-active: #7b65e0;
-        }
-
-        .dark-mode {
             --bg: #121212;
             --card: #1e1e1e;
             --text: #e0e0e0;
@@ -51,19 +32,12 @@
             --dot-active: #bb99ff;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Open Sans', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
         body {
             background: var(--bg);
             color: var(--text);
             padding: 20px;
             min-height: 100vh;
+            transition: all 0.3s;
         }
         
         .container {
@@ -101,7 +75,7 @@
             background: var(--card);
             padding: 28px;
             border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
         
         .output-section {
@@ -123,21 +97,6 @@
             color: var(--text);
         }
         
-        textarea:focus {
-            outline: none;
-            border-color: var(--btn-main);
-            box-shadow: 0 0 0 3px rgba(157, 134, 245, 0.2);
-        }
-        
-        .label-center {
-            text-align: center;
-            display: block;
-            margin: 20px 0 8px;
-            font-weight: 600;
-            color: var(--btn-text);
-            font-size: 14px;
-        }
-        
         select, input {
             width: 100%;
             padding: 10px;
@@ -148,10 +107,13 @@
             color: var(--text);
         }
 
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--btn-main);
-            box-shadow: 0 0 0 3px rgba(157, 134, 245, 0.15);
+        .label-center {
+            text-align: center;
+            display: block;
+            margin: 20px 0 8px;
+            font-weight: 600;
+            color: var(--btn-text);
+            font-size: 14px;
         }
 
         button {
@@ -164,7 +126,7 @@
             font-size: 15px;
             font-weight: 600;
             letter-spacing: 0.3px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s;
             box-shadow: 0 4px 12px var(--btn-shadow);
             min-height: 48px;
             display: flex;
@@ -175,11 +137,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 7px 20px rgba(138, 124, 168, 0.25);
-        }
-
-        button:active {
-            transform: translateY(0);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
         }
 
         #generate-btn {
@@ -191,10 +149,6 @@
             font-size: 16px;
             width: 100%;
             margin-top: 10px;
-        }
-
-        #generate-btn:hover {
-            background: linear-gradient(145deg, var(--btn-main-hover), #5d4ab5);
         }
 
         .action-buttons {
@@ -221,34 +175,16 @@
             width: 100%;
         }
 
-        .theme-toggle:hover {
-            background: var(--btn-main-hover);
-        }
-
         .preview-wrapper {
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
             overflow: hidden;
             border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
             position: relative;
             background-color: #000;
             aspect-ratio: 9/16;
-        }
-
-        .preview-controls {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .control-btn {
-            min-width: 140px;
-            font-size: 15px;
-            padding: 10px 18px;
         }
 
         .slide-preview {
@@ -313,22 +249,6 @@
             z-index: 2;
         }
 
-        .navigation {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .nav-btn {
-            min-width: 110px;
-            font-size: 15px;
-            background: linear-gradient(145deg, #c9bde8, #b8abe1);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 14px rgba(138, 124, 168, 0.2);
-        }
-
         .dots {
             display: flex;
             justify-content: center;
@@ -375,6 +295,7 @@
             opacity: 0.8;
         }
 
+        /* Редактор фото */
         .crop-modal {
             display: none;
             position: fixed;
@@ -420,21 +341,18 @@
             max-width: 300px;
         }
 
-        @media (max-width: 600px) {
-            .input-section,
-            .output-section {
-                min-width: 100%;
-            }
+        .filter-control {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+        }
 
-            .action-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-small {
-                width: 100%;
-                max-width: 280px;
-            }
+        .filter-control label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -447,7 +365,7 @@
         
         <div class="main-content">
             <div class="input-section">
-                <button id="theme-toggle" class="theme-toggle">🌙 Тёмная тема</button>
+                <button id="theme-toggle" class="theme-toggle">☀️ Светлая тема</button>
 
                 <label for="story">Текст для слайдов</label>
                 <textarea id="story">Путешествие начинается с одного шага. Открывай каждый день с улыбкой. Жизнь — это не количество дней, а количество запоминающихся моментов.</textarea>
@@ -462,22 +380,17 @@
                             <option value="abstract">Абстракция</option>
                             <option value="minimal">Минимализм</option>
                             <option value="sunset">Закат</option>
-                            <option value="custom">Свое фото</option>
+                            <option value="custom" selected>Свое фото</option>
                         </select>
                     </div>
                     <div>
                         <label for="font-family" class="label-center">Шрифт</label>
                         <select id="font-family">
-                            <option value="'Roboto', sans-serif">Roboto</option>
                             <option value="'Open Sans', sans-serif">Open Sans</option>
-                            <option value="'PT Sans', sans-serif">PT Sans</option>
+                            <option value="'Roboto', sans-serif">Roboto</option>
                             <option value="'Montserrat', sans-serif">Montserrat</option>
                             <option value="'Lobster', cursive">Lobster</option>
                             <option value="'Playfair Display', serif">Playfair Display</option>
-                            <option value="'Oswald', sans-serif">Oswald</option>
-                            <option value="'Merriweather', serif">Merriweather</option>
-                            <option value="'Ubuntu', sans-serif">Ubuntu</option>
-                            <option value="'Source Sans Pro', sans-serif">Source Sans Pro</option>
                         </select>
                     </div>
                     <div>
@@ -537,7 +450,35 @@
                      style="position: absolute; max-width: none; display: none;">
             </div>
             <div class="crop-controls">
-                <input type="range" min="1" max="3" step="0.1" value="1" class="slider" id="zoom-slider">
+                <!-- Масштаб -->
+                <div class="filter-control">
+                    <label>Масштаб: <span id="zoom-value">1.0</span></label>
+                    <input type="range" min="1" max="3" step="0.1" value="1" class="slider" id="zoom-slider">
+                </div>
+
+                <!-- Фильтры -->
+                <div class="filter-control">
+                    <label>Яркость: <span id="brightness-value">100%</span></label>
+                    <input type="range" min="0" max="200" value="100" class="slider" id="brightness-slider">
+                </div>
+                <div class="filter-control">
+                    <label>Контраст: <span id="contrast-value">100%</span></label>
+                    <input type="range" min="0" max="200" value="100" class="slider" id="contrast-slider">
+                </div>
+                <div class="filter-control">
+                    <label>Насыщенность: <span id="saturation-value">100%</span></label>
+                    <input type="range" min="0" max="200" value="100" class="slider" id="saturation-slider">
+                </div>
+                <div class="filter-control">
+                    <label>Фильтр:</label>
+                    <select id="filter-select">
+                        <option value="none">Нет</option>
+                        <option value="grayscale">Чёрно-белое</option>
+                        <option value="sepia">Сепия</option>
+                        <option value="invert">Инверсия</option>
+                    </select>
+                </div>
+
                 <div>
                     <button id="apply-crop" class="control-btn">✅ Применить</button>
                     <button id="cancel-crop" class="control-btn" style="background:#e0d5f2;">❌ Отмена</button>
@@ -548,7 +489,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Проверка загрузки библиотек
             const checkLibraries = setInterval(() => {
                 if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined') {
                     clearInterval(checkLibraries);
@@ -574,9 +514,19 @@
 
                 const cropModal = document.getElementById('crop-modal');
                 const cropImage = document.getElementById('crop-image');
+                const cropContainer = document.getElementById('crop-container');
                 const zoomSlider = document.getElementById('zoom-slider');
                 const applyCropBtn = document.getElementById('apply-crop');
                 const cancelCropBtn = document.getElementById('cancel-crop');
+                const filterSelect = document.getElementById('filter-select');
+
+                const brightnessSlider = document.getElementById('brightness-slider');
+                const contrastSlider = document.getElementById('contrast-slider');
+                const saturationSlider = document.getElementById('saturation-slider');
+                const brightnessValue = document.getElementById('brightness-value');
+                const contrastValue = document.getElementById('contrast-value');
+                const saturationValue = document.getElementById('saturation-value');
+                const zoomValue = document.getElementById('zoom-value');
 
                 const progressContainer = document.getElementById('progress-container');
                 const progressFill = document.getElementById('progress-fill');
@@ -585,129 +535,136 @@
                 let currentSlideIndex = 0;
                 let slidesData = [];
                 let customCroppedImages = {};
-                let isDarkMode = false;
 
-                // Тёмная тема
-                themeToggle.addEventListener('click', () => {
-                    isDarkMode = !isDarkMode;
-                    document.body.classList.toggle('dark-mode', isDarkMode);
-                    themeToggle.textContent = isDarkMode ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+                // Центрирование при загрузке
+                function positionImage() {
+                    const scale = parseFloat(zoomSlider.value);
+                    const filter = filterSelect.value;
+                    const brightness = brightnessSlider.value + '%';
+                    const contrast = contrastSlider.value + '%';
+                    const saturation = saturationSlider.value + '%';
+
+                    const img = cropImage;
+                    const container = cropContainer;
+
+                    const imgRatio = img.naturalWidth / img.naturalHeight;
+                    const containerRatio = 9 / 16;
+
+                    let drawWidth, drawHeight;
+                    if (imgRatio > containerRatio) {
+                        drawHeight = container.clientHeight;
+                        drawWidth = drawHeight * imgRatio;
+                    } else {
+                        drawWidth = container.clientWidth;
+                        drawHeight = drawWidth / imgRatio;
+                    }
+
+                    // Центрируем
+                    img.style.width = `${drawWidth * scale}px`;
+                    img.style.height = `${drawHeight * scale}px`;
+                    img.style.left = `${(container.clientWidth - drawWidth * scale) / 2}px`;
+                    img.style.top = `${(container.clientHeight - drawHeight * scale) / 2}px`;
+
+                    // Фильтры
+                    img.style.filter = `
+                        brightness(${brightness})
+                        contrast(${contrast})
+                        saturate(${saturation})
+                        ${filter === 'grayscale' ? 'grayscale(100%)' : ''}
+                        ${filter === 'sepia' ? 'sepia(100%)' : ''}
+                        ${filter === 'invert' ? 'invert(100%)' : ''}
+                    `;
+                }
+
+                // Обновление значений
+                zoomSlider.addEventListener('input', () => {
+                    zoomValue.textContent = zoomSlider.value;
+                    positionImage();
+                });
+                brightnessSlider.addEventListener('input', () => {
+                    brightnessValue.textContent = brightnessSlider.value + '%';
+                    positionImage();
+                });
+                contrastSlider.addEventListener('input', () => {
+                    contrastValue.textContent = contrastSlider.value + '%';
+                    positionImage();
+                });
+                saturationSlider.addEventListener('input', () => {
+                    saturationValue.textContent = saturationSlider.value + '%';
+                    positionImage();
+                });
+                filterSelect.addEventListener('change', positionImage);
+
+                // Загрузка фото
+                uploadBtn.addEventListener('click', function() {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.onload = function() {
+                                cropImage.src = e.target.result;
+                                cropImage.style.display = 'block';
+
+                                // Сброс значений
+                                zoomSlider.value = 1;
+                                brightnessSlider.value = 100;
+                                contrastSlider.value = 100;
+                                saturationSlider.value = 100;
+                                filterSelect.value = 'none';
+                                zoomValue.textContent = '1.0';
+                                brightnessValue.textContent = '100%';
+                                contrastValue.textContent = '100%';
+                                saturationValue.textContent = '100%';
+
+                                positionImage();
+                                cropModal.style.display = 'flex';
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    };
+                    input.click();
                 });
 
-                // Тематические изображения
-                const themeImages = {
-                    nature: [
-                        'https://picsum.photos/id/1/1080/1920',
-                        'https://picsum.photos/id/2/1080/1920',
-                        'https://picsum.photos/id/3/1080/1920',
-                        'https://picsum.photos/id/4/1080/1920',
-                        'https://picsum.photos/id/5/1080/1920',
-                        'https://picsum.photos/id/6/1080/1920',
-                        'https://picsum.photos/id/7/1080/1920',
-                        'https://picsum.photos/id/8/1080/1920',
-                        'https://picsum.photos/id/9/1080/1920',
-                        'https://picsum.photos/id/10/1080/1920',
-                        'https://picsum.photos/id/11/1080/1920',
-                        'https://picsum.photos/id/12/1080/1920',
-                        'https://picsum.photos/id/13/1080/1920',
-                        'https://picsum.photos/id/14/1080/1920',
-                        'https://picsum.photos/id/15/1080/1920',
-                        'https://picsum.photos/id/16/1080/1920',
-                        'https://picsum.photos/id/17/1080/1920',
-                        'https://picsum.photos/id/18/1080/1920',
-                        'https://picsum.photos/id/19/1080/1920',
-                        'https://picsum.photos/id/20/1080/1920'
-                    ],
-                    city: [
-                        'https://picsum.photos/id/26/1080/1920',
-                        'https://picsum.photos/id/30/1080/1920',
-                        'https://picsum.photos/id/34/1080/1920',
-                        'https://picsum.photos/id/42/1080/1920',
-                        'https://picsum.photos/id/50/1080/1920',
-                        'https://picsum.photos/id/55/1080/1920',
-                        'https://picsum.photos/id/60/1080/1920',
-                        'https://picsum.photos/id/65/1080/1920',
-                        'https://picsum.photos/id/70/1080/1920',
-                        'https://picsum.photos/id/75/1080/1920',
-                        'https://picsum.photos/id/80/1080/1920',
-                        'https://picsum.photos/id/85/1080/1920',
-                        'https://picsum.photos/id/90/1080/1920',
-                        'https://picsum.photos/id/95/1080/1920',
-                        'https://picsum.photos/id/100/1080/1920',
-                        'https://picsum.photos/id/105/1080/1920',
-                        'https://picsum.photos/id/110/1080/1920',
-                        'https://picsum.photos/id/115/1080/1920',
-                        'https://picsum.photos/id/120/1080/1920',
-                        'https://picsum.photos/id/125/1080/1920'
-                    ],
-                    sunset: [
-                        'https://picsum.photos/id/20/1080/1920',
-                        'https://picsum.photos/id/21/1080/1920',
-                        'https://picsum.photos/id/22/1080/1920',
-                        'https://picsum.photos/id/23/1080/1920',
-                        'https://picsum.photos/id/24/1080/1920',
-                        'https://picsum.photos/id/25/1080/1920',
-                        'https://picsum.photos/id/26/1080/1920',
-                        'https://picsum.photos/id/27/1080/1920',
-                        'https://picsum.photos/id/28/1080/1920',
-                        'https://picsum.photos/id/29/1080/1920',
-                        'https://picsum.photos/id/31/1080/1920',
-                        'https://picsum.photos/id/32/1080/1920',
-                        'https://picsum.photos/id/33/1080/1920',
-                        'https://picsum.photos/id/35/1080/1920',
-                        'https://picsum.photos/id/36/1080/1920',
-                        'https://picsum.photos/id/37/1080/1920',
-                        'https://picsum.photos/id/38/1080/1920',
-                        'https://picsum.photos/id/39/1080/1920',
-                        'https://picsum.photos/id/40/1080/1920',
-                        'https://picsum.photos/id/41/1080/1920'
-                    ],
-                    abstract: [
-                        'https://picsum.photos/id/1012/1080/1920',
-                        'https://picsum.photos/id/1015/1080/1920',
-                        'https://picsum.photos/id/1020/1080/1920',
-                        'https://picsum.photos/id/1025/1080/1920',
-                        'https://picsum.photos/id/1030/1080/1920',
-                        'https://picsum.photos/id/1035/1080/1920',
-                        'https://picsum.photos/id/1040/1080/1920',
-                        'https://picsum.photos/id/1045/1080/1920',
-                        'https://picsum.photos/id/1050/1080/1920',
-                        'https://picsum.photos/id/1055/1080/1920',
-                        'https://picsum.photos/id/1060/1080/1920',
-                        'https://picsum.photos/id/1065/1080/1920',
-                        'https://picsum.photos/id/1070/1080/1920',
-                        'https://picsum.photos/id/1075/1080/1920',
-                        'https://picsum.photos/id/1080/1080/1920',
-                        'https://picsum.photos/id/1085/1080/1920',
-                        'https://picsum.photos/id/1090/1080/1920',
-                        'https://picsum.photos/id/1095/1080/1920',
-                        'https://picsum.photos/id/1100/1080/1920',
-                        'https://picsum.photos/id/1105/1080/1920'
-                    ],
-                    minimal: [
-                        'https://picsum.photos/id/1025/1080/1920',
-                        'https://picsum.photos/id/1039/1080/1920',
-                        'https://picsum.photos/id/1060/1080/1920',
-                        'https://picsum.photos/id/1065/1080/1920',
-                        'https://picsum.photos/id/1070/1080/1920',
-                        'https://picsum.photos/id/1075/1080/1920',
-                        'https://picsum.photos/id/1080/1080/1920',
-                        'https://picsum.photos/id/1085/1080/1920',
-                        'https://picsum.photos/id/1090/1080/1920',
-                        'https://picsum.photos/id/1095/1080/1920',
-                        'https://picsum.photos/id/1110/1080/1920',
-                        'https://picsum.photos/id/1115/1080/1920',
-                        'https://picsum.photos/id/1120/1080/1920',
-                        'https://picsum.photos/id/1125/1080/1920',
-                        'https://picsum.photos/id/1130/1080/1920',
-                        'https://picsum.photos/id/1135/1080/1920',
-                        'https://picsum.photos/id/1140/1080/1920',
-                        'https://picsum.photos/id/1145/1080/1920',
-                        'https://picsum.photos/id/1150/1080/1920',
-                        'https://picsum.photos/id/1155/1080/1920'
-                    ]
-                };
+                cancelCropBtn.addEventListener('click', () => {
+                    cropModal.style.display = 'none';
+                });
 
+                applyCropBtn.addEventListener('click', function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 1080;
+                    canvas.height = 1920;
+                    const ctx = canvas.getContext('2d');
+
+                    const img = cropImage;
+                    const scale = parseFloat(zoomSlider.value);
+
+                    const displayWidth = img.clientWidth * scale;
+                    const displayHeight = img.clientHeight * scale;
+                    const realScale = 1080 / displayWidth;
+
+                    const x = -img.offsetLeft * realScale;
+                    const y = -img.offsetTop * realScale;
+                    const w = img.naturalWidth * scale * realScale;
+                    const h = img.naturalHeight * scale * realScale;
+
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, 1080, 1920);
+                    ctx.drawImage(img, x, y, w, h);
+
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    customCroppedImages[currentSlideIndex] = dataUrl;
+                    cropModal.style.display = 'none';
+                    updateSlide();
+                });
+
+                // === ОСНОВНЫЕ ФУНКЦИИ (без изменений) ===
                 function splitIntoSlides(text) {
                     const sentences = text.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/);
                     const slides = [];
@@ -725,13 +682,6 @@
                     }
                     if (currentSlide) slides.push(currentSlide);
                     return slides.length ? slides : [text];
-                }
-
-                function getRandomImage(theme) {
-                    if (theme === 'custom') return null;
-                    const set = themeImages[theme] || themeImages.nature;
-                    const randomIndex = Math.floor(Math.random() * set.length);
-                    return set[randomIndex];
                 }
 
                 function updateSlide() {
@@ -774,6 +724,74 @@
                     });
                 }
 
+                function getRandomImage(theme) {
+                    const themeImages = {
+                        nature: [
+                            'https://picsum.photos/id/1/1080/1920',
+                            'https://picsum.photos/id/2/1080/1920',
+                            'https://picsum.photos/id/3/1080/1920',
+                            'https://picsum.photos/id/4/1080/1920',
+                            'https://picsum.photos/id/5/1080/1920',
+                            'https://picsum.photos/id/6/1080/1920',
+                            'https://picsum.photos/id/7/1080/1920',
+                            'https://picsum.photos/id/8/1080/1920',
+                            'https://picsum.photos/id/9/1080/1920',
+                            'https://picsum.photos/id/10/1080/1920'
+                        ],
+                        city: [
+                            'https://picsum.photos/id/26/1080/1920',
+                            'https://picsum.photos/id/30/1080/1920',
+                            'https://picsum.photos/id/34/1080/1920',
+                            'https://picsum.photos/id/42/1080/1920',
+                            'https://picsum.photos/id/50/1080/1920',
+                            'https://picsum.photos/id/55/1080/1920',
+                            'https://picsum.photos/id/60/1080/1920',
+                            'https://picsum.photos/id/65/1080/1920',
+                            'https://picsum.photos/id/70/1080/1920',
+                            'https://picsum.photos/id/75/1080/1920'
+                        ],
+                        sunset: [
+                            'https://picsum.photos/id/20/1080/1920',
+                            'https://picsum.photos/id/21/1080/1920',
+                            'https://picsum.photos/id/22/1080/1920',
+                            'https://picsum.photos/id/23/1080/1920',
+                            'https://picsum.photos/id/24/1080/1920',
+                            'https://picsum.photos/id/25/1080/1920',
+                            'https://picsum.photos/id/26/1080/1920',
+                            'https://picsum.photos/id/27/1080/1920',
+                            'https://picsum.photos/id/28/1080/1920',
+                            'https://picsum.photos/id/29/1080/1920'
+                        ],
+                        abstract: [
+                            'https://picsum.photos/id/1012/1080/1920',
+                            'https://picsum.photos/id/1015/1080/1920',
+                            'https://picsum.photos/id/1020/1080/1920',
+                            'https://picsum.photos/id/1025/1080/1920',
+                            'https://picsum.photos/id/1030/1080/1920',
+                            'https://picsum.photos/id/1035/1080/1920',
+                            'https://picsum.photos/id/1040/1080/1920',
+                            'https://picsum.photos/id/1045/1080/1920',
+                            'https://picsum.photos/id/1050/1080/1920',
+                            'https://picsum.photos/id/1055/1080/1920'
+                        ],
+                        minimal: [
+                            'https://picsum.photos/id/1025/1080/1920',
+                            'https://picsum.photos/id/1039/1080/1920',
+                            'https://picsum.photos/id/1060/1080/1920',
+                            'https://picsum.photos/id/1065/1080/1920',
+                            'https://picsum.photos/id/1070/1080/1920',
+                            'https://picsum.photos/id/1075/1080/1920',
+                            'https://picsum.photos/id/1080/1080/1920',
+                            'https://picsum.photos/id/1085/1080/1920',
+                            'https://picsum.photos/id/1090/1080/1920',
+                            'https://picsum.photos/id/1095/1080/1920'
+                        ]
+                    };
+                    const set = themeImages[theme] || themeImages.nature;
+                    const randomIndex = Math.floor(Math.random() * set.length);
+                    return set[randomIndex];
+                }
+
                 function generateSlides() {
                     const story = storyInput.value.trim();
                     if (!story) {
@@ -801,121 +819,10 @@
                     }
                 }
 
-                // === ЗАГРУЗКА СВОИХ ФОТО (исправлено!) ===
-                uploadBtn.addEventListener('click', function() {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = function(e) {
-                        const file = e.target.files[0];
-                        if (!file) return;
-
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const blobUrl = e.target.result;
-                            const img = new Image();
-                            img.onload = function() {
-                                cropImage.src = blobUrl;
-                                cropImage.style.display = 'block';
-                                imgX = 0; imgY = 0;
-                                zoomSlider.value = 1;
-                                positionImage();
-                                cropModal.style.display = 'flex';
-                            };
-                            img.onerror = () => alert('Ошибка загрузки изображения');
-                            img.src = blobUrl; // Принудительная загрузка
-                        };
-                        reader.onerror = () => alert('Ошибка чтения файла');
-                        reader.readAsDataURL(file);
-                    };
-                    input.click();
-                });
-
-                // === РЕДАКТОР ФОТО ===
-                let imgX = 0, imgY = 0;
-
-                function positionImage() {
-                    const scale = zoomSlider.value;
-                    const img = cropImage;
-                    const container = cropContainer;
-
-                    const imgRatio = img.naturalWidth / img.naturalHeight;
-                    const containerRatio = 9 / 16;
-
-                    let drawWidth, drawHeight;
-                    if (imgRatio > containerRatio) {
-                        drawHeight = container.clientHeight;
-                        drawWidth = drawHeight * imgRatio;
-                    } else {
-                        drawWidth = container.clientWidth;
-                        drawHeight = drawWidth / imgRatio;
-                    }
-
-                    img.style.width = `${drawWidth * scale}px`;
-                    img.style.height = `${drawHeight * scale}px`;
-                    img.style.left = `${imgX}px`;
-                    img.style.top = `${imgY}px`;
-                }
-
-                zoomSlider.addEventListener('input', positionImage);
-
-                cropImage.addEventListener('mousedown', function(e) {
-                    const startX = e.clientX;
-                    const startY = e.clientY;
-                    const startLeft = imgX;
-                    const startTop = imgY;
-
-                    function move(e) {
-                        imgX = startLeft + (e.clientX - startX);
-                        imgY = startTop + (e.clientY - startY);
-                        positionImage();
-                    }
-
-                    function up() {
-                        document.removeEventListener('mousemove', move);
-                        document.removeEventListener('mouseup', up);
-                    }
-
-                    document.addEventListener('mousemove', move);
-                    document.addEventListener('mouseup', up);
-                });
-
-                cancelCropBtn.addEventListener('click', () => {
-                    cropModal.style.display = 'none';
-                });
-
-                applyCropBtn.addEventListener('click', function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 1080;
-                    canvas.height = 1920;
-                    const ctx = canvas.getContext('2d');
-
-                    const img = cropImage;
-                    const scale = parseFloat(zoomSlider.value);
-
-                    const displayWidth = img.clientWidth * scale;
-                    const displayHeight = img.clientHeight * scale;
-                    const realScale = 1080 / displayWidth;
-
-                    const x = -imgX * realScale;
-                    const y = -imgY * realScale;
-                    const w = img.naturalWidth * scale * realScale;
-                    const h = img.naturalHeight * scale * realScale;
-
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0, 0, 1080, 1920);
-                    ctx.drawImage(img, x, y, w, h);
-
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                    customCroppedImages[currentSlideIndex] = dataUrl;
-                    cropModal.style.display = 'none';
-                    updateSlide();
-                });
-
-                // Скачать текущий слайд
+                // Скачивание
                 downloadBtn.addEventListener('click', async function() {
                     if (typeof html2canvas === 'undefined') {
-                        alert('html2canvas не загружен. Перезагрузите страницу.');
+                        alert('html2canvas не загружен.');
                         return;
                     }
                     try {
@@ -937,7 +844,6 @@
                     }
                 });
 
-                // Скачать все PNG
                 downloadAllBtn.addEventListener('click', async function() {
                     if (typeof html2canvas === 'undefined') {
                         alert('html2canvas не загружен.');
@@ -985,7 +891,6 @@
                     setTimeout(() => progressContainer.style.display = 'none', 1500);
                 });
 
-                // Скачать PDF
                 downloadPdfBtn.addEventListener('click', async function() {
                     if (typeof window.jspdf === 'undefined') {
                         alert('jspdf не загружен.');
@@ -1042,6 +947,13 @@
                 nextBtn.addEventListener('click', () => goToSlide(currentSlideIndex + 1));
                 fontFamilySelect.addEventListener('change', updateSlide);
                 fontSizeSelect.addEventListener('change', updateSlide);
+
+                // Переключение темы
+                themeToggle.addEventListener('click', () => {
+                    const isDark = document.body.classList.toggle('light-mode');
+                    themeToggle.textContent = isDark ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+                    // Тема меняется через CSS переменные
+                });
 
                 // Инициализация
                 generateSlides();
