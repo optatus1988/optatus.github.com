@@ -387,7 +387,6 @@
             margin-bottom: 4px;
         }
 
-        /* === АДАПТИВНОСТЬ (мобильная версия) === */
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column-reverse;
@@ -463,7 +462,7 @@
                 <button id="theme-toggle" class="theme-toggle">☀️ Светлая тема</button>
 
                 <label for="story">Текст для слайдов</label>
-                <textarea id="story">Путешествие начинается с одного шага. Открывай каждый день с улыбкой. Жизнь — это не количество дней, а количество запоминающихся моментов.</textarea>
+                <textarea id="story"></textarea>
                 
                 <span class="label-center">Оформление</span>
                 <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
@@ -475,7 +474,7 @@
                             <option value="abstract">Абстракция</option>
                             <option value="minimal">Минимализм</option>
                             <option value="sunset">Закат</option>
-                            <option value="custom" selected>Свое фото</option>
+                            <option value="custom">Свое фото</option>
                         </select>
                     </div>
                     <div>
@@ -581,346 +580,434 @@
     </div>
 
     <script>
+        // Длинные тексты и цитаты с авторами
+        const randomTexts = [
+            "Путешествие начинается с одного шага. Открывай каждый день с улыбкой. Жизнь — это не количество дней, а количество запоминающихся моментов.",
+            "Не бойся медленного прогресса, бойся стоять на месте. Каждый день — это шанс начать что-то новое.",
+            "Успех — это результат постоянных усилий. Ты сильнее, чем думаешь. Продолжай идти.",
+            "Мечты сбываются, если верить и действовать. Сегодня — первый день остатка твоей жизни.",
+            "Маленькие шаги ведут к большим результатам. Лучший способ предсказать будущее — создать его.",
+            "\"Великие дела начинаются с малого.\" — Лао Цзы",
+            "Жизнь меняется, когда мы меняемся. Делай каждый день особенным.",
+            "Не откладывай на завтра то, что можно сделать сегодня. Прогресс важнее идеала.",
+            "Ты — автор своей жизни. Пиши красиво и с душой.",
+            "Сила воли — лучший двигатель. Падай, вставай, иди дальше.",
+            "\"Счастье — это не отсутствие проблем, а способность справляться с ними.\" — Боб Мур",
+            "Цель без плана — просто мечта. Действуй шаг за шагом.",
+            "Сложности учат, а победы вдохновляют. Не сдавайся.",
+            "Каждый закат — приглашение к размышлениям. А каждый рассвет — шанс начать с чистого листа.",
+            "Верь в себя, даже когда никто не верит. Ты ближе к цели, чем думаешь.",
+            "\"Ты не обязан быть великим, чтобы начать, но ты должен начать, чтобы стать великим.\" — Лес Браун",
+            "Создавай то, что вдохновляет. Делай мир ярче.",
+            "Лучший способ научиться — делать. Практика ведёт к мастерству.",
+            "Не бойся ошибок. Они — часть пути к успеху.",
+            "Делай сегодня то, что другие не хотят. Завтра будешь жить так, как другие не могут.",
+            "\"Самый опасный способ потерять время — это фрагментация.\" — Франсис Бэкон",
+            "Каждый день — это новый шанс стать лучше. Не упускай его.",
+            "Страх — это иллюзия. Действие — реальность. Двигайся вперёд.",
+            "Ты можешь всё, если действительно этого хочешь. Главное — не останавливаться.",
+            "Вдохновение приходит, когда ты работаешь. Начни — и оно придет.",
+            "\"Если ты не можешь быть полезным, будь хотя бы добрым.\" — Т.А. Белл",
+            "Сложные времена формируют сильных людей. Продолжай идти.",
+            "Ты создаёшь свою реальность словами. Говори о хорошем.",
+            "Не сравнивай себя с другими. Сравнивай себя с вчерашним днём.",
+            "Мечтать легко. Трудно — действовать. Но только действие приносит результат."
+        ];
+
+        // При загрузке — случайный текст
         document.addEventListener('DOMContentLoaded', function() {
+            const storyInput = document.getElementById('story');
+            const randomIndex = Math.floor(Math.random() * randomTexts.length);
+            storyInput.value = randomTexts[randomIndex];
+
             const checkLibraries = setInterval(() => {
                 if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined') {
                     clearInterval(checkLibraries);
                     initApp();
                 }
             }, 200);
+        });
 
-            function initApp() {
-                const storyInput = document.getElementById('story');
-                const generateBtn = document.getElementById('generate-btn');
-                const slidePreview = document.getElementById('slide-preview');
-                const dotsContainer = document.getElementById('dots-container');
-                const themeSelect = document.getElementById('theme');
-                const fontFamilySelect = document.getElementById('font-family');
-                const fontSizeSelect = document.getElementById('font-size');
-                const downloadAllBtn = document.getElementById('download-all');
-                const downloadPdfBtn = document.getElementById('download-pdf');
-                const downloadBtn = document.getElementById('download-btn');
-                const prevBtn = document.getElementById('prev-btn');
-                const nextBtn = document.getElementById('next-btn');
-                const uploadBtn = document.getElementById('upload-btn');
-                const themeToggle = document.getElementById('theme-toggle');
+        function initApp() {
+            const storyInput = document.getElementById('story');
+            const generateBtn = document.getElementById('generate-btn');
+            const slidePreview = document.getElementById('slide-preview');
+            const dotsContainer = document.getElementById('dots-container');
+            const themeSelect = document.getElementById('theme');
+            const fontFamilySelect = document.getElementById('font-family');
+            const fontSizeSelect = document.getElementById('font-size');
+            const downloadAllBtn = document.getElementById('download-all');
+            const downloadPdfBtn = document.getElementById('download-pdf');
+            const downloadBtn = document.getElementById('download-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const uploadBtn = document.getElementById('upload-btn');
+            const themeToggle = document.getElementById('theme-toggle');
 
-                const cropModal = document.getElementById('crop-modal');
-                const cropImage = document.getElementById('crop-image');
-                const cropContainer = document.getElementById('crop-container');
-                const zoomSlider = document.getElementById('zoom-slider');
-                const applyCropBtn = document.getElementById('apply-crop');
-                const cancelCropBtn = document.getElementById('cancel-crop');
-                const filterSelect = document.getElementById('filter-select');
+            const cropModal = document.getElementById('crop-modal');
+            const cropImage = document.getElementById('crop-image');
+            const cropContainer = document.getElementById('crop-container');
+            const zoomSlider = document.getElementById('zoom-slider');
+            const applyCropBtn = document.getElementById('apply-crop');
+            const cancelCropBtn = document.getElementById('cancel-crop');
+            const filterSelect = document.getElementById('filter-select');
 
-                const brightnessSlider = document.getElementById('brightness-slider');
-                const contrastSlider = document.getElementById('contrast-slider');
-                const saturationSlider = document.getElementById('saturation-slider');
-                const brightnessValue = document.getElementById('brightness-value');
-                const contrastValue = document.getElementById('contrast-value');
-                const saturationValue = document.getElementById('saturation-value');
-                const zoomValue = document.getElementById('zoom-value');
+            const brightnessSlider = document.getElementById('brightness-slider');
+            const contrastSlider = document.getElementById('contrast-slider');
+            const saturationSlider = document.getElementById('saturation-slider');
+            const brightnessValue = document.getElementById('brightness-value');
+            const contrastValue = document.getElementById('contrast-value');
+            const saturationValue = document.getElementById('saturation-value');
+            const zoomValue = document.getElementById('zoom-value');
 
-                const progressContainer = document.getElementById('progress-container');
-                const progressFill = document.getElementById('progress-fill');
-                const progressText = document.getElementById('progress-text');
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
 
-                let currentSlideIndex = 0;
-                let slidesData = [];
-                let customCroppedImages = {};
+            let currentSlideIndex = 0;
+            let slidesData = [];
+            let customCroppedImages = {};
 
-                // Центрирование и фильтры
-                function positionImage() {
-                    const scale = parseFloat(zoomSlider.value);
-                    const img = cropImage;
-                    const container = cropContainer;
+            // Центрирование и масштабирование
+            function positionImage() {
+                const scale = parseFloat(zoomSlider.value);
+                const img = cropImage;
+                const container = cropContainer;
 
-                    const imgRatio = img.naturalWidth / img.naturalHeight;
-                    const containerRatio = container.clientWidth / container.clientHeight;
+                const imgRatio = img.naturalWidth / img.naturalHeight;
+                const containerRatio = container.clientWidth / container.clientHeight;
 
-                    let drawWidth, drawHeight;
-                    if (imgRatio > containerRatio) {
-                        drawHeight = container.clientHeight;
-                        drawWidth = drawHeight * imgRatio;
-                    } else {
-                        drawWidth = container.clientWidth;
-                        drawHeight = drawWidth / imgRatio;
-                    }
-
-                    const scaledWidth = drawWidth * scale;
-                    const scaledHeight = drawHeight * scale;
-
-                    img.style.width = `${scaledWidth}px`;
-                    img.style.height = `${scaledHeight}px`;
-                    img.style.left = `${(container.clientWidth - scaledWidth) / 2}px`;
-                    img.style.top = `${(container.clientHeight - scaledHeight) / 2}px`;
-
-                    // Фильтры
-                    img.style.filter = `
-                        brightness(${brightnessSlider.value}%)
-                        contrast(${contrastSlider.value}%)
-                        saturate(${saturationSlider.value}%)
-                        ${filterSelect.value === 'grayscale' ? 'grayscale(100%)' : ''}
-                        ${filterSelect.value === 'sepia' ? 'sepia(100%)' : ''}
-                        ${filterSelect.value === 'invert' ? 'invert(100%)' : ''}
-                    `;
+                let drawWidth, drawHeight;
+                if (imgRatio > containerRatio) {
+                    drawHeight = container.clientHeight;
+                    drawWidth = drawHeight * imgRatio;
+                } else {
+                    drawWidth = container.clientWidth;
+                    drawHeight = drawWidth / imgRatio;
                 }
 
-                // Обновление значений
-                zoomSlider.addEventListener('input', () => {
-                    zoomValue.textContent = zoomSlider.value;
-                    positionImage();
-                });
-                brightnessSlider.addEventListener('input', () => {
-                    brightnessValue.textContent = brightnessSlider.value + '%';
-                    positionImage();
-                });
-                contrastSlider.addEventListener('input', () => {
-                    contrastValue.textContent = contrastSlider.value + '%';
-                    positionImage();
-                });
-                saturationSlider.addEventListener('input', () => {
-                    saturationValue.textContent = saturationSlider.value + '%';
-                    positionImage();
-                });
-                filterSelect.addEventListener('change', positionImage);
+                const scaledWidth = drawWidth * scale;
+                const scaledHeight = drawHeight * scale;
 
-                // Загрузка фото
-                uploadBtn.addEventListener('click', function() {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = function(e) {
-                        const file = e.target.files[0];
-                        if (!file) return;
+                img.style.width = `${scaledWidth}px`;
+                img.style.height = `${scaledHeight}px`;
+                img.style.left = `${(container.clientWidth - scaledWidth) / 2}px`;
+                img.style.top = `${(container.clientHeight - scaledHeight) / 2}px`;
 
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = new Image();
-                            img.onload = function() {
-                                cropImage.src = e.target.result;
-                                cropImage.style.display = 'block';
+                // Фильтры
+                img.style.filter = `
+                    brightness(${brightnessSlider.value}%)
+                    contrast(${contrastSlider.value}%)
+                    saturate(${saturationSlider.value}%)
+                    ${filterSelect.value === 'grayscale' ? 'grayscale(100%)' : ''}
+                    ${filterSelect.value === 'sepia' ? 'sepia(100%)' : ''}
+                    ${filterSelect.value === 'invert' ? 'invert(100%)' : ''}
+                `;
+            }
 
-                                // Сброс
-                                zoomSlider.value = 1;
-                                brightnessSlider.value = 100;
-                                contrastSlider.value = 100;
-                                saturationSlider.value = 100;
-                                filterSelect.value = 'none';
-                                zoomValue.textContent = '1.0';
-                                brightnessValue.textContent = '100%';
-                                contrastValue.textContent = '100%';
-                                saturationValue.textContent = '100%';
+            // Обновление значений
+            zoomSlider.addEventListener('input', () => {
+                zoomValue.textContent = zoomSlider.value;
+                positionImage();
+            });
+            brightnessSlider.addEventListener('input', () => {
+                brightnessValue.textContent = brightnessSlider.value + '%';
+                positionImage();
+            });
+            contrastSlider.addEventListener('input', () => {
+                contrastValue.textContent = contrastSlider.value + '%';
+                positionImage();
+            });
+            saturationSlider.addEventListener('input', () => {
+                saturationValue.textContent = saturationSlider.value + '%';
+                positionImage();
+            });
+            filterSelect.addEventListener('change', positionImage);
 
-                                positionImage();
-                                cropModal.style.display = 'flex';
-                            };
-                            img.src = e.target.result;
+            // Кнопка "Загрузить фото"
+            uploadBtn.addEventListener('click', function() {
+                themeSelect.value = 'custom'; // Автоматически выбираем "Своё фото"
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            cropImage.src = e.target.result;
+                            cropImage.style.display = 'block';
+
+                            zoomSlider.value = 1;
+                            brightnessSlider.value = 100;
+                            contrastSlider.value = 100;
+                            saturationSlider.value = 100;
+                            filterSelect.value = 'none';
+                            zoomValue.textContent = '1.0';
+                            brightnessValue.textContent = '100%';
+                            contrastValue.textContent = '100%';
+                            saturationValue.textContent = '100%';
+
+                            positionImage();
+                            cropModal.style.display = 'flex';
                         };
-                        reader.readAsDataURL(file);
+                        img.src = e.target.result;
                     };
-                    input.click();
-                });
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            });
 
-                cancelCropBtn.addEventListener('click', () => {
-                    cropModal.style.display = 'none';
-                });
+            cancelCropBtn.addEventListener('click', () => {
+                cropModal.style.display = 'none';
+            });
 
-                // Применение обрезки
-                applyCropBtn.addEventListener('click', function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 1080;
-                    canvas.height = 1920;
-                    const ctx = canvas.getContext('2d');
+            applyCropBtn.addEventListener('click', function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 1080;
+                canvas.height = 1920;
+                const ctx = canvas.getContext('2d');
 
-                    const img = cropImage;
-                    const scale = parseFloat(zoomSlider.value);
+                const img = cropImage;
+                const scale = parseFloat(zoomSlider.value);
 
-                    const naturalWidth = img.naturalWidth;
-                    const naturalHeight = img.naturalHeight;
-                    const displayWidth = img.clientWidth;
-                    const displayHeight = img.clientHeight;
+                const naturalWidth = img.naturalWidth;
+                const naturalHeight = img.naturalHeight;
+                const displayWidth = img.clientWidth;
+                const displayHeight = img.clientHeight;
 
-                    const scaleX = naturalWidth / displayWidth;
-                    const scaleY = naturalHeight / displayHeight;
+                const scaleX = naturalWidth / displayWidth;
+                const scaleY = naturalHeight / displayHeight;
 
-                    const x = -img.offsetLeft * scaleX;
-                    const y = -img.offsetTop * scaleY;
-                    const w = 1080 * scaleX;
-                    const h = 1920 * scaleY;
+                const x = -img.offsetLeft * scaleX;
+                const y = -img.offsetTop * scaleY;
+                const w = 1080 * scaleX;
+                const h = 1920 * scaleY;
 
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0, 0, 1080, 1920);
-                    ctx.drawImage(img, x, y, w, h, 0, 0, 1080, 1920);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, 1080, 1920);
+                ctx.drawImage(img, x, y, w, h, 0, 0, 1080, 1920);
 
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                    customCroppedImages[currentSlideIndex] = dataUrl;
-                    cropModal.style.display = 'none';
-                    updateSlide();
-                });
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                customCroppedImages[currentSlideIndex] = dataUrl;
+                cropModal.style.display = 'none';
+                updateSlide();
+            });
 
-                // Основные функции (без изменений)
-                function splitIntoSlides(text) {
-                    const sentences = text.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/);
-                    const slides = [];
-                    let currentSlide = '';
-                    const maxWords = 20;
+            // Основные функции
+            function splitIntoSlides(text) {
+                const sentences = text.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/);
+                const slides = [];
+                let currentSlide = '';
+                const maxWords = 20;
 
-                    for (const sentence of sentences) {
-                        const words = sentence.trim().split(' ');
-                        if (words.length + currentSlide.split(' ').length <= maxWords || !currentSlide) {
-                            currentSlide += (currentSlide ? ' ' : '') + sentence.trim();
-                        } else {
-                            slides.push(currentSlide);
-                            currentSlide = sentence.trim();
-                        }
-                    }
-                    if (currentSlide) slides.push(currentSlide);
-                    return slides.length ? slides : [text];
-                }
-
-                function updateSlide() {
-                    if (!slidesData.length) return;
-
-                    const data = slidesData[currentSlideIndex];
-                    const fontSizeMap = {
-                        small: '60px',
-                        medium: '80px',
-                        large: '100px',
-                        xlarge: '120px'
-                    };
-                    const fontSize = fontSizeMap[fontSizeSelect.value];
-                    const fontFamily = fontFamilySelect.value;
-
-                    let imageUrl;
-                    if (themeSelect.value === 'custom' && customCroppedImages[currentSlideIndex]) {
-                        imageUrl = customCroppedImages[currentSlideIndex];
+                for (const sentence of sentences) {
+                    const words = sentence.trim().split(' ');
+                    if (words.length + currentSlide.split(' ').length <= maxWords || !currentSlide) {
+                        currentSlide += (currentSlide ? ' ' : '') + sentence.trim();
                     } else {
-                        imageUrl = getRandomImage(themeSelect.value);
+                        slides.push(currentSlide);
+                        currentSlide = sentence.trim();
                     }
+                }
+                if (currentSlide) slides.push(currentSlide);
+                return slides.length ? slides : [text];
+            }
 
-                    if (imageUrl) {
-                        slidePreview.style.backgroundImage = `url(${imageUrl})`;
-                        slidePreview.style.backgroundSize = 'cover';
-                        slidePreview.style.backgroundPosition = 'center';
-                    } else {
-                        slidePreview.style.background = '#000';
-                    }
+            function updateSlide() {
+                if (!slidesData.length) return;
 
-                    const textEl = slidePreview.querySelector('.slide-text');
-                    textEl.textContent = data.text;
-                    textEl.style.fontSize = fontSize;
-                    textEl.style.fontFamily = fontFamily;
+                const data = slidesData[currentSlideIndex];
+                const fontSizeMap = {
+                    small: '60px',
+                    medium: '80px',
+                    large: '100px',
+                    xlarge: '120px'
+                };
+                const fontSize = fontSizeMap[fontSizeSelect.value];
+                const fontFamily = fontFamilySelect.value;
 
-                    slidePreview.querySelector('.slide-number').textContent = `${currentSlideIndex + 1}/${slidesData.length}`;
-
-                    dotsContainer.querySelectorAll('.dot').forEach((dot, i) => {
-                        dot.classList.toggle('active', i === currentSlideIndex);
-                    });
+                let imageUrl;
+                if (themeSelect.value === 'custom' && customCroppedImages[currentSlideIndex]) {
+                    imageUrl = customCroppedImages[currentSlideIndex];
+                } else {
+                    imageUrl = getRandomImage(themeSelect.value);
                 }
 
-                function getRandomImage(theme) {
-                    const themeImages = {
-                        nature: [
-                            'https://picsum.photos/id/1/1080/1920',
-                            'https://picsum.photos/id/2/1080/1920',
-                            'https://picsum.photos/id/3/1080/1920',
-                            'https://picsum.photos/id/4/1080/1920',
-                            'https://picsum.photos/id/5/1080/1920',
-                            'https://picsum.photos/id/6/1080/1920',
-                            'https://picsum.photos/id/7/1080/1920',
-                            'https://picsum.photos/id/8/1080/1920',
-                            'https://picsum.photos/id/9/1080/1920',
-                            'https://picsum.photos/id/10/1080/1920'
-                        ],
-                        city: [
-                            'https://picsum.photos/id/26/1080/1920',
-                            'https://picsum.photos/id/30/1080/1920',
-                            'https://picsum.photos/id/34/1080/1920',
-                            'https://picsum.photos/id/42/1080/1920',
-                            'https://picsum.photos/id/50/1080/1920',
-                            'https://picsum.photos/id/55/1080/1920',
-                            'https://picsum.photos/id/60/1080/1920',
-                            'https://picsum.photos/id/65/1080/1920',
-                            'https://picsum.photos/id/70/1080/1920',
-                            'https://picsum.photos/id/75/1080/1920'
-                        ],
-                        sunset: [
-                            'https://picsum.photos/id/20/1080/1920',
-                            'https://picsum.photos/id/21/1080/1920',
-                            'https://picsum.photos/id/22/1080/1920',
-                            'https://picsum.photos/id/23/1080/1920',
-                            'https://picsum.photos/id/24/1080/1920',
-                            'https://picsum.photos/id/25/1080/1920',
-                            'https://picsum.photos/id/26/1080/1920',
-                            'https://picsum.photos/id/27/1080/1920',
-                            'https://picsum.photos/id/28/1080/1920',
-                            'https://picsum.photos/id/29/1080/1920'
-                        ],
-                        abstract: [
-                            'https://picsum.photos/id/1012/1080/1920',
-                            'https://picsum.photos/id/1015/1080/1920',
-                            'https://picsum.photos/id/1020/1080/1920',
-                            'https://picsum.photos/id/1025/1080/1920',
-                            'https://picsum.photos/id/1030/1080/1920',
-                            'https://picsum.photos/id/1035/1080/1920',
-                            'https://picsum.photos/id/1040/1080/1920',
-                            'https://picsum.photos/id/1045/1080/1920',
-                            'https://picsum.photos/id/1050/1080/1920',
-                            'https://picsum.photos/id/1055/1080/1920'
-                        ],
-                        minimal: [
-                            'https://picsum.photos/id/1025/1080/1920',
-                            'https://picsum.photos/id/1039/1080/1920',
-                            'https://picsum.photos/id/1060/1080/1920',
-                            'https://picsum.photos/id/1065/1080/1920',
-                            'https://picsum.photos/id/1070/1080/1920',
-                            'https://picsum.photos/id/1075/1080/1920',
-                            'https://picsum.photos/id/1080/1080/1920',
-                            'https://picsum.photos/id/1085/1080/1920',
-                            'https://picsum.photos/id/1090/1080/1920',
-                            'https://picsum.photos/id/1095/1080/1920'
-                        ]
-                    };
-                    const set = themeImages[theme] || themeImages.nature;
-                    const randomIndex = Math.floor(Math.random() * set.length);
-                    return set[randomIndex];
+                if (imageUrl) {
+                    slidePreview.style.backgroundImage = `url(${imageUrl})`;
+                    slidePreview.style.backgroundSize = 'cover';
+                    slidePreview.style.backgroundPosition = 'center';
+                } else {
+                    slidePreview.style.background = '#000';
                 }
 
-                function generateSlides() {
-                    const story = storyInput.value.trim();
-                    if (!story) {
-                        alert('Введите текст!');
-                        return;
-                    }
+                const textEl = slidePreview.querySelector('.slide-text');
+                textEl.textContent = data.text;
+                textEl.style.fontSize = fontSize;
+                textEl.style.fontFamily = fontFamily;
 
-                    slidesData = splitIntoSlides(story).map((text, i) => ({ text, i }));
-                    dotsContainer.innerHTML = '';
-                    slidesData.forEach((_, i) => {
-                        const dot = document.createElement('div');
-                        dot.className = i === 0 ? 'dot active' : 'dot';
-                        dot.onclick = () => goToSlide(i);
-                        dotsContainer.appendChild(dot);
-                    });
+                slidePreview.querySelector('.slide-number').textContent = `${currentSlideIndex + 1}/${slidesData.length}`;
 
-                    currentSlideIndex = 0;
+                dotsContainer.querySelectorAll('.dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlideIndex);
+                });
+            }
+
+            function getRandomImage(theme) {
+                const themeImages = {
+                    nature: [
+                        'https://picsum.photos/id/1/1080/1920', 'https://picsum.photos/id/2/1080/1920', 'https://picsum.photos/id/3/1080/1920', 'https://picsum.photos/id/4/1080/1920', 'https://picsum.photos/id/5/1080/1920',
+                        'https://picsum.photos/id/6/1080/1920', 'https://picsum.photos/id/7/1080/1920', 'https://picsum.photos/id/8/1080/1920', 'https://picsum.photos/id/9/1080/1920', 'https://picsum.photos/id/10/1080/1920',
+                        'https://picsum.photos/id/11/1080/1920', 'https://picsum.photos/id/12/1080/1920', 'https://picsum.photos/id/13/1080/1920', 'https://picsum.photos/id/14/1080/1920', 'https://picsum.photos/id/15/1080/1920',
+                        'https://picsum.photos/id/16/1080/1920', 'https://picsum.photos/id/17/1080/1920', 'https://picsum.photos/id/18/1080/1920', 'https://picsum.photos/id/19/1080/1920', 'https://picsum.photos/id/20/1080/1920',
+                        'https://picsum.photos/id/21/1080/1920', 'https://picsum.photos/id/22/1080/1920', 'https://picsum.photos/id/23/1080/1920', 'https://picsum.photos/id/24/1080/1920', 'https://picsum.photos/id/25/1080/1920',
+                        'https://picsum.photos/id/26/1080/1920', 'https://picsum.photos/id/27/1080/1920', 'https://picsum.photos/id/28/1080/1920', 'https://picsum.photos/id/29/1080/1920', 'https://picsum.photos/id/30/1080/1920',
+                        'https://picsum.photos/id/31/1080/1920', 'https://picsum.photos/id/32/1080/1920', 'https://picsum.photos/id/33/1080/1920', 'https://picsum.photos/id/34/1080/1920', 'https://picsum.photos/id/35/1080/1920',
+                        'https://picsum.photos/id/36/1080/1920', 'https://picsum.photos/id/37/1080/1920', 'https://picsum.photos/id/38/1080/1920', 'https://picsum.photos/id/39/1080/1920', 'https://picsum.photos/id/40/1080/1920',
+                        'https://picsum.photos/id/41/1080/1920', 'https://picsum.photos/id/42/1080/1920', 'https://picsum.photos/id/43/1080/1920', 'https://picsum.photos/id/44/1080/1920', 'https://picsum.photos/id/45/1080/1920',
+                        'https://picsum.photos/id/46/1080/1920', 'https://picsum.photos/id/47/1080/1920', 'https://picsum.photos/id/48/1080/1920', 'https://picsum.photos/id/49/1080/1920', 'https://picsum.photos/id/50/1080/1920'
+                    ],
+                    city: [
+                        'https://picsum.photos/id/51/1080/1920', 'https://picsum.photos/id/52/1080/1920', 'https://picsum.photos/id/53/1080/1920', 'https://picsum.photos/id/54/1080/1920', 'https://picsum.photos/id/55/1080/1920',
+                        'https://picsum.photos/id/56/1080/1920', 'https://picsum.photos/id/57/1080/1920', 'https://picsum.photos/id/58/1080/1920', 'https://picsum.photos/id/59/1080/1920', 'https://picsum.photos/id/60/1080/1920',
+                        'https://picsum.photos/id/61/1080/1920', 'https://picsum.photos/id/62/1080/1920', 'https://picsum.photos/id/63/1080/1920', 'https://picsum.photos/id/64/1080/1920', 'https://picsum.photos/id/65/1080/1920',
+                        'https://picsum.photos/id/66/1080/1920', 'https://picsum.photos/id/67/1080/1920', 'https://picsum.photos/id/68/1080/1920', 'https://picsum.photos/id/69/1080/1920', 'https://picsum.photos/id/70/1080/1920',
+                        'https://picsum.photos/id/71/1080/1920', 'https://picsum.photos/id/72/1080/1920', 'https://picsum.photos/id/73/1080/1920', 'https://picsum.photos/id/74/1080/1920', 'https://picsum.photos/id/75/1080/1920',
+                        'https://picsum.photos/id/76/1080/1920', 'https://picsum.photos/id/77/1080/1920', 'https://picsum.photos/id/78/1080/1920', 'https://picsum.photos/id/79/1080/1920', 'https://picsum.photos/id/80/1080/1920',
+                        'https://picsum.photos/id/81/1080/1920', 'https://picsum.photos/id/82/1080/1920', 'https://picsum.photos/id/83/1080/1920', 'https://picsum.photos/id/84/1080/1920', 'https://picsum.photos/id/85/1080/1920',
+                        'https://picsum.photos/id/86/1080/1920', 'https://picsum.photos/id/87/1080/1920', 'https://picsum.photos/id/88/1080/1920', 'https://picsum.photos/id/89/1080/1920', 'https://picsum.photos/id/90/1080/1920',
+                        'https://picsum.photos/id/91/1080/1920', 'https://picsum.photos/id/92/1080/1920', 'https://picsum.photos/id/93/1080/1920', 'https://picsum.photos/id/94/1080/1920', 'https://picsum.photos/id/95/1080/1920',
+                        'https://picsum.photos/id/96/1080/1920', 'https://picsum.photos/id/97/1080/1920', 'https://picsum.photos/id/98/1080/1920', 'https://picsum.photos/id/99/1080/1920', 'https://picsum.photos/id/100/1080/1920'
+                    ],
+                    sunset: [
+                        'https://picsum.photos/id/20/1080/1920', 'https://picsum.photos/id/21/1080/1920', 'https://picsum.photos/id/22/1080/1920', 'https://picsum.photos/id/23/1080/1920', 'https://picsum.photos/id/24/1080/1920',
+                        'https://picsum.photos/id/25/1080/1920', 'https://picsum.photos/id/26/1080/1920', 'https://picsum.photos/id/27/1080/1920', 'https://picsum.photos/id/28/1080/1920', 'https://picsum.photos/id/29/1080/1920',
+                        'https://picsum.photos/id/31/1080/1920', 'https://picsum.photos/id/32/1080/1920', 'https://picsum.photos/id/33/1080/1920', 'https://picsum.photos/id/35/1080/1920', 'https://picsum.photos/id/36/1080/1920',
+                        'https://picsum.photos/id/37/1080/1920', 'https://picsum.photos/id/38/1080/1920', 'https://picsum.photos/id/39/1080/1920', 'https://picsum.photos/id/40/1080/1920', 'https://picsum.photos/id/41/1080/1920',
+                        'https://picsum.photos/id/42/1080/1920', 'https://picsum.photos/id/43/1080/1920', 'https://picsum.photos/id/44/1080/1920', 'https://picsum.photos/id/45/1080/1920', 'https://picsum.photos/id/46/1080/1920',
+                        'https://picsum.photos/id/47/1080/1920', 'https://picsum.photos/id/48/1080/1920', 'https://picsum.photos/id/49/1080/1920', 'https://picsum.photos/id/50/1080/1920', 'https://picsum.photos/id/51/1080/1920',
+                        'https://picsum.photos/id/52/1080/1920', 'https://picsum.photos/id/53/1080/1920', 'https://picsum.photos/id/54/1080/1920', 'https://picsum.photos/id/55/1080/1920', 'https://picsum.photos/id/56/1080/1920',
+                        'https://picsum.photos/id/57/1080/1920', 'https://picsum.photos/id/58/1080/1920', 'https://picsum.photos/id/59/1080/1920', 'https://picsum.photos/id/60/1080/1920', 'https://picsum.photos/id/61/1080/1920',
+                        'https://picsum.photos/id/62/1080/1920', 'https://picsum.photos/id/63/1080/1920', 'https://picsum.photos/id/64/1080/1920', 'https://picsum.photos/id/65/1080/1920', 'https://picsum.photos/id/66/1080/1920',
+                        'https://picsum.photos/id/67/1080/1920', 'https://picsum.photos/id/68/1080/1920', 'https://picsum.photos/id/69/1080/1920', 'https://picsum.photos/id/70/1080/1920', 'https://picsum.photos/id/71/1080/1920',
+                        'https://picsum.photos/id/72/1080/1920'
+                    ],
+                    abstract: [
+                        'https://picsum.photos/id/1012/1080/1920', 'https://picsum.photos/id/1015/1080/1920', 'https://picsum.photos/id/1020/1080/1920', 'https://picsum.photos/id/1025/1080/1920', 'https://picsum.photos/id/1030/1080/1920',
+                        'https://picsum.photos/id/1035/1080/1920', 'https://picsum.photos/id/1040/1080/1920', 'https://picsum.photos/id/1045/1080/1920', 'https://picsum.photos/id/1050/1080/1920', 'https://picsum.photos/id/1055/1080/1920',
+                        'https://picsum.photos/id/1060/1080/1920', 'https://picsum.photos/id/1065/1080/1920', 'https://picsum.photos/id/1070/1080/1920', 'https://picsum.photos/id/1075/1080/1920', 'https://picsum.photos/id/1080/1080/1920',
+                        'https://picsum.photos/id/1085/1080/1920', 'https://picsum.photos/id/1090/1080/1920', 'https://picsum.photos/id/1095/1080/1920', 'https://picsum.photos/id/1100/1080/1920', 'https://picsum.photos/id/1105/1080/1920',
+                        'https://picsum.photos/id/1110/1080/1920', 'https://picsum.photos/id/1115/1080/1920', 'https://picsum.photos/id/1120/1080/1920', 'https://picsum.photos/id/1125/1080/1920', 'https://picsum.photos/id/1130/1080/1920',
+                        'https://picsum.photos/id/1135/1080/1920', 'https://picsum.photos/id/1140/1080/1920', 'https://picsum.photos/id/1145/1080/1920', 'https://picsum.photos/id/1150/1080/1920', 'https://picsum.photos/id/1155/1080/1920',
+                        'https://picsum.photos/id/1160/1080/1920', 'https://picsum.photos/id/1165/1080/1920', 'https://picsum.photos/id/1170/1080/1920', 'https://picsum.photos/id/1175/1080/1920', 'https://picsum.photos/id/1180/1080/1920',
+                        'https://picsum.photos/id/1185/1080/1920', 'https://picsum.photos/id/1190/1080/1920', 'https://picsum.photos/id/1195/1080/1920', 'https://picsum.photos/id/1200/1080/1920', 'https://picsum.photos/id/1205/1080/1920',
+                        'https://picsum.photos/id/1210/1080/1920', 'https://picsum.photos/id/1215/1080/1920', 'https://picsum.photos/id/1220/1080/1920', 'https://picsum.photos/id/1225/1080/1920', 'https://picsum.photos/id/1230/1080/1920',
+                        'https://picsum.photos/id/1235/1080/1920', 'https://picsum.photos/id/1240/1080/1920', 'https://picsum.photos/id/1245/1080/1920', 'https://picsum.photos/id/1250/1080/1920', 'https://picsum.photos/id/1255/1080/1920',
+                        'https://picsum.photos/id/1260/1080/1920'
+                    ],
+                    minimal: [
+                        'https://picsum.photos/id/1025/1080/1920', 'https://picsum.photos/id/1039/1080/1920', 'https://picsum.photos/id/1060/1080/1920', 'https://picsum.photos/id/1065/1080/1920', 'https://picsum.photos/id/1070/1080/1920',
+                        'https://picsum.photos/id/1075/1080/1920', 'https://picsum.photos/id/1080/1080/1920', 'https://picsum.photos/id/1085/1080/1920', 'https://picsum.photos/id/1090/1080/1920', 'https://picsum.photos/id/1095/1080/1920',
+                        'https://picsum.photos/id/1110/1080/1920', 'https://picsum.photos/id/1115/1080/1920', 'https://picsum.photos/id/1120/1080/1920', 'https://picsum.photos/id/1125/1080/1920', 'https://picsum.photos/id/1130/1080/1920',
+                        'https://picsum.photos/id/1135/1080/1920', 'https://picsum.photos/id/1140/1080/1920', 'https://picsum.photos/id/1145/1080/1920', 'https://picsum.photos/id/1150/1080/1920', 'https://picsum.photos/id/1155/1080/1920',
+                        'https://picsum.photos/id/1160/1080/1920', 'https://picsum.photos/id/1165/1080/1920', 'https://picsum.photos/id/1170/1080/1920', 'https://picsum.photos/id/1175/1080/1920', 'https://picsum.photos/id/1180/1080/1920',
+                        'https://picsum.photos/id/1185/1080/1920', 'https://picsum.photos/id/1190/1080/1920', 'https://picsum.photos/id/1195/1080/1920', 'https://picsum.photos/id/1200/1080/1920', 'https://picsum.photos/id/1205/1080/1920',
+                        'https://picsum.photos/id/1210/1080/1920', 'https://picsum.photos/id/1215/1080/1920', 'https://picsum.photos/id/1220/1080/1920', 'https://picsum.photos/id/1225/1080/1920', 'https://picsum.photos/id/1230/1080/1920',
+                        'https://picsum.photos/id/1235/1080/1920', 'https://picsum.photos/id/1240/1080/1920', 'https://picsum.photos/id/1245/1080/1920', 'https://picsum.photos/id/1250/1080/1920', 'https://picsum.photos/id/1255/1080/1920',
+                        'https://picsum.photos/id/1260/1080/1920', 'https://picsum.photos/id/1265/1080/1920', 'https://picsum.photos/id/1270/1080/1920', 'https://picsum.photos/id/1275/1080/1920', 'https://picsum.photos/id/1280/1080/1920',
+                        'https://picsum.photos/id/1285/1080/1920', 'https://picsum.photos/id/1290/1080/1920', 'https://picsum.photos/id/1295/1080/1920', 'https://picsum.photos/id/1300/1080/1920', 'https://picsum.photos/id/1305/1080/1920',
+                        'https://picsum.photos/id/1310/1080/1920'
+                    ]
+                };
+                const set = themeImages[theme] || themeImages.nature;
+                const randomIndex = Math.floor(Math.random() * set.length);
+                return set[randomIndex];
+            }
+
+            function generateSlides() {
+                const story = storyInput.value.trim();
+                if (!story) {
+                    alert('Введите текст!');
+                    return;
+                }
+
+                slidesData = splitIntoSlides(story).map((text, i) => ({ text, i }));
+                dotsContainer.innerHTML = '';
+                slidesData.forEach((_, i) => {
+                    const dot = document.createElement('div');
+                    dot.className = i === 0 ? 'dot active' : 'dot';
+                    dot.onclick = () => goToSlide(i);
+                    dotsContainer.appendChild(dot);
+                });
+
+                currentSlideIndex = 0;
+                updateSlide();
+            }
+
+            function goToSlide(index) {
+                if (index >= 0 && index < slidesData.length) {
+                    currentSlideIndex = index;
                     updateSlide();
                 }
+            }
 
-                function goToSlide(index) {
-                    if (index >= 0 && index < slidesData.length) {
-                        currentSlideIndex = index;
-                        updateSlide();
-                    }
+            // Скачивание — без номера слайда
+            downloadBtn.addEventListener('click', async function() {
+                if (typeof html2canvas === 'undefined') {
+                    alert('html2canvas не загружен.');
+                    return;
+                }
+                try {
+                    const numberEl = slidePreview.querySelector('.slide-number');
+                    numberEl.style.display = 'none'; // Скрыть номер
+
+                    const canvas = await html2canvas(slidePreview, {
+                        width: 1080,
+                        height: 1920,
+                        scale: 1,
+                        useCORS: true,
+                        backgroundColor: null
+                    });
+
+                    numberEl.style.display = 'flex'; // Вернуть
+
+                    const link = document.createElement('a');
+                    link.download = `slide-${currentSlideIndex + 1}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (e) {
+                    alert('Ошибка: ' + e.message);
+                }
+            });
+
+            downloadAllBtn.addEventListener('click', async function() {
+                if (typeof html2canvas === 'undefined') {
+                    alert('html2canvas не загружен.');
+                    return;
+                }
+                if (!slidesData.length) {
+                    alert('Сначала создайте слайды!');
+                    return;
                 }
 
-                // Скачивание
-                downloadBtn.addEventListener('click', async function() {
-                    if (typeof html2canvas === 'undefined') {
-                        alert('html2canvas не загружен.');
-                        return;
-                    }
+                progressContainer.style.display = 'block';
+                progressFill.style.width = '0%';
+                progressText.textContent = `Создание... 0/${slidesData.length}`;
+
+                const numberEl = slidePreview.querySelector('.slide-number');
+
+                for (let i = 0; i < slidesData.length; i++) {
+                    goToSlide(i);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+
                     try {
+                        numberEl.style.display = 'none';
                         const canvas = await html2canvas(slidePreview, {
                             width: 1080,
                             height: 1920,
@@ -928,131 +1015,98 @@
                             useCORS: true,
                             backgroundColor: null
                         });
+                        numberEl.style.display = 'flex';
+
+                        const imgData = canvas.toDataURL('image/png');
                         const link = document.createElement('a');
-                        link.download = `slide-${currentSlideIndex + 1}.png`;
-                        link.href = canvas.toDataURL('image/png');
+                        link.download = `slide-${i + 1}.png`;
+                        link.href = imgData;
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                    } catch (e) {
-                        alert('Ошибка: ' + e.message);
+
+                        const progress = Math.round(((i + 1) / slidesData.length) * 100);
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = `Создание... ${i + 1}/${slidesData.length}`;
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    } catch (error) {
+                        alert(`Ошибка при слайде ${i + 1}`);
                     }
+                }
+
+                setTimeout(() => progressContainer.style.display = 'none', 1500);
+            });
+
+            downloadPdfBtn.addEventListener('click', async function() {
+                if (typeof window.jspdf === 'undefined') {
+                    alert('jspdf не загружен.');
+                    return;
+                }
+                if (!slidesData.length) {
+                    alert('Сначала создайте слайды!');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: [1080, 1920]
                 });
 
-                downloadAllBtn.addEventListener('click', async function() {
-                    if (typeof html2canvas === 'undefined') {
-                        alert('html2canvas не загружен.');
-                        return;
+                progressContainer.style.display = 'block';
+                progressFill.style.width = '0%';
+                progressText.textContent = `PDF... 0/${slidesData.length}`;
+
+                const numberEl = slidePreview.querySelector('.slide-number');
+
+                for (let i = 0; i < slidesData.length; i++) {
+                    goToSlide(i);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+
+                    try {
+                        numberEl.style.display = 'none';
+                        const canvas = await html2canvas(slidePreview, {
+                            width: 1080,
+                            height: 1920,
+                            scale: 1,
+                            useCORS: true,
+                            backgroundColor: null
+                        });
+                        numberEl.style.display = 'flex';
+
+                        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                        if (i > 0) pdf.addPage();
+                        pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1920);
+
+                        const progress = Math.round(((i + 1) / slidesData.length) * 100);
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = `PDF... ${i + 1}/${slidesData.length}`;
+                    } catch (error) {
+                        alert(`Ошибка при создании PDF (слайд ${i + 1})`);
                     }
-                    if (!slidesData.length) {
-                        alert('Сначала создайте слайды!');
-                        return;
-                    }
+                }
 
-                    progressContainer.style.display = 'block';
-                    progressFill.style.width = '0%';
-                    progressText.textContent = `Создание... 0/${slidesData.length}`;
+                pdf.save('instagram-carousel.pdf');
+                progressContainer.style.display = 'none';
+            });
 
-                    for (let i = 0; i < slidesData.length; i++) {
-                        goToSlide(i);
-                        await new Promise(resolve => setTimeout(resolve, 300));
+            // Обработчики
+            generateBtn.addEventListener('click', generateSlides);
+            prevBtn.addEventListener('click', () => goToSlide(currentSlideIndex - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentSlideIndex + 1));
+            fontFamilySelect.addEventListener('change', updateSlide);
+            fontSizeSelect.addEventListener('change', updateSlide);
 
-                        try {
-                            const canvas = await html2canvas(slidePreview, {
-                                width: 1080,
-                                height: 1920,
-                                scale: 1,
-                                useCORS: true,
-                                backgroundColor: null
-                            });
+            // Переключение темы
+            themeToggle.addEventListener('click', () => {
+                const isLight = document.body.classList.toggle('light-mode');
+                themeToggle.textContent = isLight ? '🌙 Тёмная тема' : '☀️ Светлая тема';
+            });
 
-                            const imgData = canvas.toDataURL('image/png');
-                            const link = document.createElement('a');
-                            link.download = `slide-${i + 1}.png`;
-                            link.href = imgData;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-
-                            const progress = Math.round(((i + 1) / slidesData.length) * 100);
-                            progressFill.style.width = progress + '%';
-                            progressText.textContent = `Создание... ${i + 1}/${slidesData.length}`;
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        } catch (error) {
-                            alert(`Ошибка при слайде ${i + 1}`);
-                        }
-                    }
-
-                    setTimeout(() => progressContainer.style.display = 'none', 1500);
-                });
-
-                downloadPdfBtn.addEventListener('click', async function() {
-                    if (typeof window.jspdf === 'undefined') {
-                        alert('jspdf не загружен.');
-                        return;
-                    }
-                    if (!slidesData.length) {
-                        alert('Сначала создайте слайды!');
-                        return;
-                    }
-
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF({
-                        orientation: 'portrait',
-                        unit: 'px',
-                        format: [1080, 1920]
-                    });
-
-                    progressContainer.style.display = 'block';
-                    progressFill.style.width = '0%';
-                    progressText.textContent = `PDF... 0/${slidesData.length}`;
-
-                    for (let i = 0; i < slidesData.length; i++) {
-                        goToSlide(i);
-                        await new Promise(resolve => setTimeout(resolve, 300));
-
-                        try {
-                            const canvas = await html2canvas(slidePreview, {
-                                width: 1080,
-                                height: 1920,
-                                scale: 1,
-                                useCORS: true,
-                                backgroundColor: null
-                            });
-
-                            const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                            if (i > 0) pdf.addPage();
-                            pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1920);
-
-                            const progress = Math.round(((i + 1) / slidesData.length) * 100);
-                            progressFill.style.width = progress + '%';
-                            progressText.textContent = `PDF... ${i + 1}/${slidesData.length}`;
-                        } catch (error) {
-                            alert(`Ошибка при создании PDF (слайд ${i + 1})`);
-                        }
-                    }
-
-                    pdf.save('instagram-carousel.pdf');
-                    progressContainer.style.display = 'none';
-                });
-
-                // Обработчики
-                generateBtn.addEventListener('click', generateSlides);
-                prevBtn.addEventListener('click', () => goToSlide(currentSlideIndex - 1));
-                nextBtn.addEventListener('click', () => goToSlide(currentSlideIndex + 1));
-                fontFamilySelect.addEventListener('change', updateSlide);
-                fontSizeSelect.addEventListener('change', updateSlide);
-
-                // Переключение темы
-                themeToggle.addEventListener('click', () => {
-                    const isLight = document.body.classList.toggle('light-mode');
-                    themeToggle.textContent = isLight ? '🌙 Тёмная тема' : '☀️ Светлая тема';
-                });
-
-                // Инициализация
-                generateSlides();
-            }
-        });
+            // Инициализация
+            generateSlides();
+        }
     </script>
 </body>
 </html>
