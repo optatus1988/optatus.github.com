@@ -32,6 +32,25 @@
             --dot-active: #bb99ff;
         }
 
+        .light-mode {
+            --bg: #f5f5f5;
+            --card: #ffffff;
+            --text: #333333;
+            --title: #6a4c93;
+            --border: #cccccc;
+            --btn-bg: #e0e0e0;
+            --btn-text: #5a4a8a;
+            --btn-shadow: rgba(0, 0, 0, 0.1);
+            --btn-hover: #d0d0d0;
+            --btn-main: #8a6bd7;
+            --btn-main-hover: #7a5ac0;
+            --btn-main-text: white;
+            --progress-bg: #e0e0e0;
+            --progress-fill: #8a6bd7;
+            --dot: #cccccc;
+            --dot-active: #8a6bd7;
+        }
+
         body {
             background: var(--bg);
             color: var(--text);
@@ -83,7 +102,7 @@
             min-width: 300px;
             position: relative;
         }
-
+        
         textarea {
             width: 100%;
             height: 160px;
@@ -175,7 +194,6 @@
             width: 100%;
         }
 
-        /* Превью — без transform: scale для точности */
         .preview-wrapper {
             width: 100%;
             max-width: 400px;
@@ -186,17 +204,14 @@
             position: relative;
             background-color: #000;
             aspect-ratio: 9/16;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .slide-preview {
             width: 1080px;
             height: 1920px;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -206,7 +221,9 @@
             color: white;
             text-align: center;
             padding: 8% 10%;
-            /* Убран transform: scale — теперь точное отображение */
+            margin: 0 auto;
+            transform-origin: 0 0;
+            transform: scale(0.370);
         }
         
         .backdrop {
@@ -232,7 +249,10 @@
             font-weight: 600;
             overflow: hidden;
             font-size: 80px;
-            padding: 0 40px;
+            /* Заменяем padding на max-width и text-align */
+            max-width: 80%;
+            text-align: center;
+            padding: 0;
         }
         
         .slide-number {
@@ -269,37 +289,6 @@
             background-color: var(--dot-active);
         }
 
-        /* Кнопки управления */
-        .preview-controls {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .control-btn {
-            min-width: 140px;
-            font-size: 15px;
-            padding: 10px 18px;
-            white-space: nowrap;
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            min-width: 110px;
-            font-size: 15px;
-            padding: 10px 16px;
-        }
-
         .progress-container {
             margin: 18px 0 0;
             display: none;
@@ -328,7 +317,7 @@
             opacity: 0.8;
         }
 
-        /* Редактор фото — точное соответствие слайду */
+        /* Редактор фото */
         .crop-modal {
             display: none;
             position: fixed;
@@ -352,18 +341,12 @@
             overflow: hidden;
             aspect-ratio: 9/16;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #crop-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+            position: absolute;
             max-width: none;
-            display: block;
+            display: none;
         }
 
         .crop-controls {
@@ -394,66 +377,24 @@
             margin-bottom: 4px;
         }
 
-        /* Мобильная версия */
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column-reverse;
-                align-items: stretch;
-            }
+        /* Стили для кнопок управления превью */
+        .preview-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
 
-            .input-section,
-            .output-section {
-                width: 100%;
-                max-width: none;
-                padding: 16px;
-            }
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
 
-            .input-section {
-                order: 2;
-                margin-top: 16px;
-            }
-
-            .output-section {
-                order: 1;
-                margin-bottom: 16px;
-            }
-
-            .preview-wrapper {
-                max-width: 100%;
-                width: 100%;
-                height: 60vh;
-            }
-
-            .slide-preview {
-                transform: none !important;
-                width: 100%;
-                height: 100%;
-                padding: 10% 5%;
-                max-height: 100%;
-            }
-
-            .slide-text {
-                font-size: 50px;
-                line-height: 1.3;
-                padding: 0 20px;
-            }
-
-            .preview-controls,
-            .navigation {
-                justify-content: center;
-            }
-
-            .control-btn,
-            .nav-btn {
-                min-width: 120px;
-                font-size: 15px;
-                padding: 10px 14px;
-            }
-
-            button {
-                font-size: 15px;
-                min-height: 48px;
-            }
+        .nav-btn, .control-btn {
+            flex: 1;
+            min-width: 140px;
         }
     </style>
 </head>
@@ -468,10 +409,12 @@
             <div class="input-section">
                 <button id="theme-toggle" class="theme-toggle">☀️ Светлая тема</button>
 
-                <label for="story">Текст для слайдов</label>
-                <textarea id="story"></textarea>
+                <label for="story">Текст для слайдов (нажмите Enter для нового слайда)</label>
+                <textarea id="story" placeholder="Введите текст. Каждая новая строка (нажатие Enter) станет отдельным слайдом.&#10;&#10;Путешествие начинается с одного шага.&#10;Открывай каждый день с улыбкой.&#10;Жизнь — это не количество дней, а количество запоминающихся моментов."></textarea>
                 
-                <span class="label-center">Оформление</span>
+                <!-- Заменяем "Оформление" на кнопку "Обновить фразу" -->
+                <button id="refresh-quote-btn" class="theme-toggle">🔄 Обновить фразу</button>
+                
                 <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
                     <div>
                         <label for="theme" class="label-center">Фон по теме</label>
@@ -481,7 +424,7 @@
                             <option value="abstract">Абстракция</option>
                             <option value="minimal">Минимализм</option>
                             <option value="sunset">Закат</option>
-                            <option value="custom">Свое фото</option>
+                            <option value="custom" selected>Свое фото</option>
                         </select>
                     </div>
                     <div>
@@ -547,9 +490,17 @@
             <div class="crop-container" id="crop-container">
                 <img id="crop-image" 
                      src="" 
-                     alt="Изображение для редактирования">
+                     alt="Изображение для редактирования" 
+                     style="position: absolute; max-width: none; display: none;">
             </div>
             <div class="crop-controls">
+                <!-- Масштаб -->
+                <div class="filter-control">
+                    <label>Масштаб: <span id="zoom-value">1.0</span></label>
+                    <input type="range" min="1" max="3" step="0.1" value="1" class="slider" id="zoom-slider">
+                </div>
+
+                <!-- Фильтры -->
                 <div class="filter-control">
                     <label>Яркость: <span id="brightness-value">100%</span></label>
                     <input type="range" min="0" max="200" value="100" class="slider" id="brightness-slider">
@@ -571,6 +522,7 @@
                         <option value="invert">Инверсия</option>
                     </select>
                 </div>
+
                 <div>
                     <button id="apply-crop" class="control-btn">✅ Применить</button>
                     <button id="cancel-crop" class="control-btn" style="background:#e0d5f2;">❌ Отмена</button>
@@ -580,518 +532,715 @@
     </div>
 
     <script>
-        // Длинные тексты с чередованием: 1 цитата + 5 обычных
-        const randomTexts = [
-            "Путешествие начинается с одного шага. Открывай каждый день с улыбкой. Жизнь — это не количество дней, а количество запоминающихся моментов.",
-            "Не бойся медленного прогресса, бойся стоять на месте. Каждый день — это шанс начать что-то новое.",
-            "Успех — это результат постоянных усилий. Ты сильнее, чем думаешь. Продолжай идти.",
-            "Мечты сбываются, если верить и действовать. Сегодня — первый день остатка твоей жизни.",
-            "Маленькие шаги ведут к большим результатам. Лучший способ предсказать будущее — создать его.",
-            "\"Великие дела начинаются с малого.\" — Лао Цзы",
-            "Жизнь меняется, когда мы меняемся. Делай каждый день особенным.",
-            "Не откладывай на завтра то, что можно сделать сегодня. Прогресс важнее идеала.",
-            "Ты — автор своей жизни. Пиши красиво и с душой.",
-            "Сила воли — лучший двигатель. Падай, вставай, иди дальше.",
-            "\"Счастье — это не отсутствие проблем, а способность справляться с ними.\" — Боб Мур",
-            "Цель без плана — просто мечта. Действуй шаг за шагом.",
-            "Сложности учат, а победы вдохновляют. Не сдавайся.",
-            "Каждый закат — приглашение к размышлениям. А каждый рассвет — шанс начать с чистого листа.",
-            "Верь в себя, даже когда никто не верит. Ты ближе к цели, чем думаешь.",
-            "\"Ты не обязан быть великим, чтобы начать, но ты должен начать, чтобы стать великим.\" — Лес Браун",
-            "Создавай то, что вдохновляет. Делай мир ярче.",
-            "Лучший способ научиться — делать. Практика ведёт к мастерству.",
-            "Не бойся ошибок. Они — часть пути к успеху.",
-            "Делай сегодня то, что другие не хотят. Завтра будешь жить так, как другие не могут.",
-            "\"Если ты не можешь быть полезным, будь хотя бы добрым.\" — Т.А. Белл",
-            "Сложные времена формируют сильных людей. Продолжай идти.",
-            "Ты создаёшь свою реальность словами. Говори о хорошем.",
-            "Не сравнивай себя с другими. Сравнивай себя с вчерашним днём.",
-            "Мечтать легко. Трудно — действовать. Но только действие приносит результат."
-        ];
-
         document.addEventListener('DOMContentLoaded', function() {
-            const storyInput = document.getElementById('story');
-            const randomIndex = Math.floor(Math.random() * randomTexts.length);
-            storyInput.value = randomTexts[randomIndex];
-
             const checkLibraries = setInterval(() => {
                 if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined') {
                     clearInterval(checkLibraries);
                     initApp();
                 }
             }, 200);
-        });
 
-        function initApp() {
-            const storyInput = document.getElementById('story');
-            const generateBtn = document.getElementById('generate-btn');
-            const slidePreview = document.getElementById('slide-preview');
-            const dotsContainer = document.getElementById('dots-container');
-            const themeSelect = document.getElementById('theme');
-            const fontFamilySelect = document.getElementById('font-family');
-            const fontSizeSelect = document.getElementById('font-size');
-            const downloadAllBtn = document.getElementById('download-all');
-            const downloadPdfBtn = document.getElementById('download-pdf');
-            const downloadBtn = document.getElementById('download-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const uploadBtn = document.getElementById('upload-btn');
-            const themeToggle = document.getElementById('theme-toggle');
+            function initApp() {
+                const storyInput = document.getElementById('story');
+                const generateBtn = document.getElementById('generate-btn');
+                const slidePreview = document.getElementById('slide-preview');
+                const dotsContainer = document.getElementById('dots-container');
+                const themeSelect = document.getElementById('theme');
+                const fontFamilySelect = document.getElementById('font-family');
+                const fontSizeSelect = document.getElementById('font-size');
+                const downloadAllBtn = document.getElementById('download-all');
+                const downloadPdfBtn = document.getElementById('download-pdf');
+                const downloadBtn = document.getElementById('download-btn');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const uploadBtn = document.getElementById('upload-btn');
+                const themeToggle = document.getElementById('theme-toggle');
+                const refreshQuoteBtn = document.getElementById('refresh-quote-btn'); // Новая кнопка
 
-            const cropModal = document.getElementById('crop-modal');
-            const cropImage = document.getElementById('crop-image');
-            const cropContainer = document.getElementById('crop-container');
-            const applyCropBtn = document.getElementById('apply-crop');
-            const cancelCropBtn = document.getElementById('cancel-crop');
-            const filterSelect = document.getElementById('filter-select');
+                const cropModal = document.getElementById('crop-modal');
+                const cropImage = document.getElementById('crop-image');
+                const cropContainer = document.getElementById('crop-container');
+                const zoomSlider = document.getElementById('zoom-slider');
+                const applyCropBtn = document.getElementById('apply-crop');
+                const cancelCropBtn = document.getElementById('cancel-crop');
+                const filterSelect = document.getElementById('filter-select');
 
-            const brightnessSlider = document.getElementById('brightness-slider');
-            const contrastSlider = document.getElementById('contrast-slider');
-            const saturationSlider = document.getElementById('saturation-slider');
-            const brightnessValue = document.getElementById('brightness-value');
-            const contrastValue = document.getElementById('contrast-value');
-            const saturationValue = document.getElementById('saturation-value');
+                const brightnessSlider = document.getElementById('brightness-slider');
+                const contrastSlider = document.getElementById('contrast-slider');
+                const saturationSlider = document.getElementById('saturation-slider');
+                const brightnessValue = document.getElementById('brightness-value');
+                const contrastValue = document.getElementById('contrast-value');
+                const saturationValue = document.getElementById('saturation-value');
+                const zoomValue = document.getElementById('zoom-value');
 
-            const progressContainer = document.getElementById('progress-container');
-            const progressFill = document.getElementById('progress-fill');
-            const progressText = document.getElementById('progress-text');
+                const progressContainer = document.getElementById('progress-container');
+                const progressFill = document.getElementById('progress-fill');
+                const progressText = document.getElementById('progress-text');
 
-            let currentSlideIndex = 0;
-            let slidesData = [];
-            let customCroppedImages = {};
+                let currentSlideIndex = 0;
+                let slidesData = [];
+                let customCroppedImages = {}; // Теперь это объект, где ключ - индекс слайда
 
-            // Фильтры
-            function updateFilters() {
-                const brightness = brightnessSlider.value + '%';
-                const contrast = contrastSlider.value + '%';
-                const saturation = saturationSlider.value + '%';
-                const filter = filterSelect.value;
+                // *** МАССИВ МОТИВИРУЮЩИХ ЦИТАТ ***
+                const motivationalQuotes = [
+                    "Путешествие в тысячу миль начинается с первого шага. — Лао-цзы",
+                    "Открывай каждый день с улыбкой.",
+                    "Жизнь — это не количество дней, а количество запоминающихся моментов.",
+                    "Начни там, где ты есть. Используй то, что у тебя есть. Делай то, что можешь. — Артур Эш",
+                    "Не жди идеального момента, возьми момент и сделай его идеальным.",
+                    "Ты никогда не пересечешь океан, если боишься потерять берег из виду. — Христофор Колумб",
+                    "Секрет успеха — начать. — Марк Твен",
+                    "Делай то, что можешь, с тем, что имеешь, там, где ты есть. — Теодор Рузвельт",
+                    "Успех — это идти от неудачи к неудаче, не теряя энтузиазма. — Уинстон Черчилль",
+                    "Единственный способ делать великую работу — любить то, что ты делаешь. — Стив Джобс",
+                    "Не позволяй тому, что ты не можешь сделать, мешать тому, что ты можешь сделать. — Джон Вуден",
+                    "Ты пропускаешь 100% тех бросков, которые не делаешь. — Уэйн Гретцки",
+                    "Лучший способ предсказать будущее — это создать его. — Питер Друкер",
+                    "Не считай дни, извлекай из них пользу. — Мухаммед Али",
+                    "Если ты можешь мечтать об этом, ты можешь это сделать. — Уолт Дисней",
+                    "Цель не в том, чтобы быть лучшим среди других, а в том, чтобы быть лучше, чем ты был вчера.",
+                    "Сложные пути часто ведут к красивым местам.",
+                    "Твоя скорость не имеет значения, главное — не останавливаться. — Конфуций",
+                    "Когда тебе кажется, что все идет против тебя, помни, что самолет взлетает против ветра, а не по ветру. — Генри Форд",
+                    "Верь, что можешь, и ты уже прошел половину пути. — Теодор Рузвельт",
+                    "Маленькие шаги каждый день ведут к большим изменениям завтра.",
+                    "Ты сильнее, чем думаешь, способнее, чем выглядишь, и умнее, чем считаешь. — Кристофер Робин",
+                    "Секрет перемен — в концентрации всей своей энергии не на борьбе со старым, а на построении нового. — Сократ",
+                    "Никогда не поздно стать тем, кем ты мог бы быть. — Джордж Элиот",
+                    "Делай маленькие шаги в правильном направлении и чудеса начнут происходить. — Мартин Фрост",
+                    "Все, что ты можешь вообразить, реально. — Пабло Пикассо",
+                    "Ты не обязан быть великим, чтобы начать, но ты должен начать, чтобы быть великим. — Зиг Зиглар",
+                    "Каждый день — это новая возможность начать заново.",
+                    "Не позволяй страху перед тем, что может пойти не так, мешать тебе сделать то, что должно сработать.",
+                    "Ты — хозяин своей судьбы, капитан своей души. — Уильям Эрнест Хенли",
+                    "Трудности укрепляют разум, как труд укрепляет тело. — Сенека",
+                    "Верь в себя и в то, что ты можешь сделать. Это уже половина успеха. — Теодор Рузвельт",
+                    "Живи так, будто ты умрешь завтра. Учись так, будто ты будешь жить вечно. — Махатма Ганди",
+                    "Твое время ограничено, не трать его, живя чужой жизнью. — Стив Джобс",
+                    "Единственный предел — это тот, который ты сам себе устанавливаешь.",
+                    "Сегодня — это твой день! Твой гора ждет, так что... вперед! — Доктор Сьюз",
+                    "Ты не можешь изменить направление ветра, но можешь подстроить паруса, чтобы достичь своей цели. — Джимми Дин",
+                    "Все начинается с твоего решения попробовать.",
+                    "Не бойся двигаться медленно, бойся стоять на месте. — Китайская пословица",
+                    "Мечты не работают, пока ты не работаешь. — Джон С. Максвелл",
+                    "Найди то, что ты любишь, и пусть это будет твоя жизнь. — Будда",
+                    "Каждый мастер когда-то был новичком.",
+                    "Ты не можешь пересечь море, просто стоя и глядя на воду. — Рабиндранат Тагор",
+                    "Вдохновение существует, но оно застает тебя только за работой. — Пабло Пикассо",
+                    "Не позволяй вчерашнему дню занимать слишком много места в сегодняшнем. — Уилл Роджерс",
+                    "Твоя жизнь — твоя история, убедись, что она того стоит.",
+                    "Ты не обязан быть идеальным, чтобы быть потрясающим.",
+                    "Делай то, что тебя пугает, и страх уйдет. — Роберт Т. Кийосаки",
+                    "Самый трудный шаг — первый. — Ирландская пословица",
+                    "Верь в чудеса, но не полагайся на них. — Иоганн Вольфганг фон Гёте",
+                    "Твоя единственная конкуренция — это ты вчерашний.",
+                    "Когда план А не сработал, не волнуйся, в алфавите еще 25 букв.",
+                    "Каждое утро дает тебе шанс начать все заново. Используй его.",
+                    "Счастье — это не что-то готовое. Оно зависит от твоих действий. — Далай-лама",
+                    "Ты не можешь изменить прошлое, но можешь испортить настоящее, беспокоясь о будущем. — Джим Рон",
+                    "Жизнь — это 10% того, что с тобой происходит, и 90% того, как ты на это реагируешь. — Чарльз Суиндолл",
+                    "Ты никогда не слишком стар, чтобы поставить себе новую цель или мечтать новой мечтой. — К.С. Льюис",
+                    "Не жди, пока условия станут идеальными. Начни сейчас и делай то, что можешь, с тем, что у тебя есть. — Наполеон Хилл",
+                    "Самое большое приключение — это жить жизнью своей мечты. — Опра Уинфри",
+                    "Ты не обязан быть великим, чтобы начать, но ты должен начать, чтобы быть великим. — Зиг Зиглар",
+                    "Успех — это сумма маленьких усилий, повторяемых изо дня в день. — Роберт Кольер",
+                    "Ты не можешь пересечь море, просто стоя и глядя на воду. — Рабиндранат Тагор",
+                    "Верь в себя и в то, что ты можешь сделать. Это уже половина успеха. — Теодор Рузвельт"
+                ];
 
-                cropImage.style.filter = `
-                    brightness(${brightness})
-                    contrast(${contrast})
-                    saturate(${saturation})
-                    ${filter === 'grayscale' ? 'grayscale(100%)' : ''}
-                    ${filter === 'sepia' ? 'sepia(100%)' : ''}
-                    ${filter === 'invert' ? 'invert(100%)' : ''}
-                `;
-            }
+                // Центрирование при загрузке
+                function positionImage() {
+                    const scale = parseFloat(zoomSlider.value);
+                    const filter = filterSelect.value;
+                    const brightness = brightnessSlider.value + '%';
+                    const contrast = contrastSlider.value + '%';
+                    const saturation = saturationSlider.value + '%';
 
-            brightnessSlider.addEventListener('input', () => {
-                brightnessValue.textContent = brightnessSlider.value + '%';
-                updateFilters();
-            });
-            contrastSlider.addEventListener('input', () => {
-                contrastValue.textContent = contrastSlider.value + '%';
-                updateFilters();
-            });
-            saturationSlider.addEventListener('input', () => {
-                saturationValue.textContent = saturationSlider.value + '%';
-                updateFilters();
-            });
-            filterSelect.addEventListener('change', updateFilters);
+                    const img = cropImage;
+                    const container = cropContainer;
 
-            // Загрузка фото
-            uploadBtn.addEventListener('click', function() {
-                themeSelect.value = 'custom'; // Автоматически выбираем "Своё фото"
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
+                    // Получаем реальные размеры изображения
+                    const imgWidth = img.naturalWidth;
+                    const imgHeight = img.naturalHeight;
 
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        cropImage.src = e.target.result;
-                        cropImage.onload = function() {
-                            brightnessSlider.value = 100;
-                            contrastSlider.value = 100;
-                            saturationSlider.value = 100;
-                            filterSelect.value = 'none';
-                            brightnessValue.textContent = '100%';
-                            contrastValue.textContent = '100%';
-                            saturationValue.textContent = '100%';
-                            updateFilters();
-                            cropModal.style.display = 'flex';
-                        };
-                    };
-                    reader.readAsDataURL(file);
-                };
-                input.click();
-            });
+                    // Рассчитываем размеры, до которых нужно растянуть изображение, чтобы заполнить контейнер по одному измерению
+                    let drawWidth, drawHeight;
+                    const containerRatio = container.clientWidth / container.clientHeight;
+                    const imgRatio = imgWidth / imgHeight;
 
-            cancelCropBtn.addEventListener('click', () => {
-                cropModal.style.display = 'none';
-            });
+                    if (imgRatio > containerRatio) {
+                        // Изображение шире контейнера относительно пропорций
+                        drawHeight = container.clientHeight;
+                        drawWidth = drawHeight * imgRatio;
+                    } else {
+                        // Изображение выше контейнера относительно пропорций
+                        drawWidth = container.clientWidth;
+                        drawHeight = drawWidth / imgRatio;
+                    }
 
-            applyCropBtn.addEventListener('click', function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 1080;
-                canvas.height = 1920;
-                const ctx = canvas.getContext('2d');
+                    // Применяем масштаб
+                    const scaledWidth = drawWidth * scale;
+                    const scaledHeight = drawHeight * scale;
 
-                const img = cropImage;
-                const imgRatio = img.naturalWidth / img.naturalHeight;
-                const targetRatio = 1080 / 1920;
+                    // Центрируем изображение. Смещение - это половина разницы между размером контейнера и размером изображения.
+                    // Если изображение больше контейнера, смещение будет отрицательным, что правильно.
+                    const left = (container.clientWidth - scaledWidth) / 2;
+                    const top = (container.clientHeight - scaledHeight) / 2;
 
-                let drawWidth, drawHeight, dx = 0, dy = 0;
+                    img.style.width = `${scaledWidth}px`;
+                    img.style.height = `${scaledHeight}px`;
+                    img.style.left = `${left}px`;
+                    img.style.top = `${top}px`;
 
-                if (imgRatio > targetRatio) {
-                    drawHeight = 1920;
-                    drawWidth = 1920 * imgRatio;
-                    dx = -(drawWidth - 1080) / 2;
-                } else {
-                    drawWidth = 1080;
-                    drawHeight = 1080 / imgRatio;
-                    dy = -(drawHeight - 1920) / 2;
+                    // Фильтры
+                    img.style.filter = `
+                        brightness(${brightness})
+                        contrast(${contrast})
+                        saturate(${saturation})
+                        ${filter === 'grayscale' ? 'grayscale(100%)' : ''}
+                        ${filter === 'sepia' ? 'sepia(100%)' : ''}
+                        ${filter === 'invert' ? 'invert(100%)' : ''}
+                    `;
                 }
 
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, 1080, 1920);
-                ctx.drawImage(img, dx, dy, drawWidth, drawHeight);
+                // Обновление значений
+                zoomSlider.addEventListener('input', () => {
+                    zoomValue.textContent = zoomSlider.value;
+                    positionImage();
+                });
+                brightnessSlider.addEventListener('input', () => {
+                    brightnessValue.textContent = brightnessSlider.value + '%';
+                    positionImage();
+                });
+                contrastSlider.addEventListener('input', () => {
+                    contrastValue.textContent = contrastSlider.value + '%';
+                    positionImage();
+                });
+                saturationSlider.addEventListener('input', () => {
+                    saturationValue.textContent = saturationSlider.value + '%';
+                    positionImage();
+                });
+                filterSelect.addEventListener('change', positionImage);
 
-                // Фильтры
-                if (filterSelect.value !== 'none') {
-                    const imageData = ctx.getImageData(0, 0, 1080, 1920);
-                    const data = imageData.data;
+                // Загрузка фото
+                uploadBtn.addEventListener('click', function() {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.multiple = true; // Разрешаем множественный выбор
+                    input.onchange = function(e) {
+                        const files = Array.from(e.target.files).slice(0, 10); // Берем максимум 10 файлов
+                        if (!files.length) return;
 
-                    for (let i = 0; i < data.length; i += 4) {
-                        if (filterSelect.value === 'grayscale') {
-                            const avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                            data[i] = data[i+1] = data[i+2] = avg;
-                        } else if (filterSelect.value === 'sepia') {
-                            const r = data[i], g = data[i+1], b = data[i+2];
-                            data[i] = Math.min(255, 0.393*r + 0.769*g + 0.189*b);
-                            data[i+1] = Math.min(255, 0.349*r + 0.686*g + 0.168*b);
-                            data[i+2] = Math.min(255, 0.272*r + 0.534*g + 0.131*b);
-                        } else if (filterSelect.value === 'invert') {
-                            data[i] = 255 - data[i];
-                            data[i+1] = 255 - data[i+1];
-                            data[i+2] = 255 - data[i+2];
+                        // Очищаем предыдущие загруженные изображения
+                        customCroppedImages = {};
+
+                        let loadedImages = 0;
+                        files.forEach((file, index) => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = new Image();
+                                img.onload = function() {
+                                    // Сохраняем изображение для последующего использования
+                                    customCroppedImages[index] = {
+                                        originalImageUrl: e.target.result,
+                                        scale: 1,
+                                        brightness: 100,
+                                        contrast: 100,
+                                        saturation: 100,
+                                        filter: 'none'
+                                    };
+                                    loadedImages++;
+
+                                    // Если это первое изображение, показываем редактор
+                                    if (index === 0) {
+                                        cropImage.src = e.target.result;
+                                        cropImage.style.display = 'block';
+
+                                        // Сброс значений
+                                        zoomSlider.value = 1;
+                                        brightnessSlider.value = 100;
+                                        contrastSlider.value = 100;
+                                        saturationSlider.value = 100;
+                                        filterSelect.value = 'none';
+                                        zoomValue.textContent = '1.0';
+                                        brightnessValue.textContent = '100%';
+                                        contrastValue.textContent = '100%';
+                                        saturationValue.textContent = '100%';
+
+                                        positionImage();
+                                        cropModal.style.display = 'flex';
+                                    }
+
+                                    // Если все изображения загружены и редактор закрыт, обновляем слайд
+                                    if (loadedImages === files.length && cropModal.style.display === 'none') {
+                                        updateSlide();
+                                    }
+                                };
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    };
+                    input.click();
+                });
+
+                cancelCropBtn.addEventListener('click', () => {
+                    cropModal.style.display = 'none';
+                });
+
+                // Применение обрезки
+                applyCropBtn.addEventListener('click', function() {
+                    // Создаем объект, который хранит параметры обрезки/масштабирования
+                    const cropParams = {
+                        scale: parseFloat(zoomSlider.value),
+                        brightness: brightnessSlider.value,
+                        contrast: contrastSlider.value,
+                        saturation: saturationSlider.value,
+                        filter: filterSelect.value,
+                        // Сохраняем исходное изображение как Data URL
+                        originalImageUrl: cropImage.src
+                    };
+
+                    // Сохраняем параметры для первого слайда (индекс 0)
+                    customCroppedImages[0] = cropParams;
+                    cropModal.style.display = 'none';
+                    updateSlide();
+                });
+
+                // === ОСНОВНЫЕ ФУНКЦИИ ===
+                // *** ИЗМЕНЕНО: Разбивка текста по абзацам ***
+                function splitIntoSlides(text) {
+                    // Разбиваем текст по символу новой строки
+                    const lines = text.split('\n');
+                    // Фильтруем пустые строки
+                    const slides = lines.filter(line => line.trim().length > 0);
+                    return slides.length ? slides : [text];
+                }
+
+                function updateSlide() {
+                    if (!slidesData.length) return;
+
+                    const data = slidesData[currentSlideIndex];
+                    const fontSizeMap = {
+                        small: '60px',
+                        medium: '80px',
+                        large: '100px',
+                        xlarge: '120px'
+                    };
+                    const fontSize = fontSizeMap[fontSizeSelect.value];
+                    const fontFamily = fontFamilySelect.value;
+
+                    let bgStyle = '';
+
+                    if (themeSelect.value === 'custom' && Object.keys(customCroppedImages).length > 0) {
+                        // *** ИЗМЕНЕНО: Берем изображение по индексу слайда, если оно есть, или циклически ***
+                        const imageIndex = currentSlideIndex % Object.keys(customCroppedImages).length;
+                        const params = customCroppedImages[imageIndex];
+                        
+                        if (params.originalImageUrl) {
+                            // Устанавливаем исходное изображение как фон
+                            bgStyle = `url(${params.originalImageUrl})`;
+                            
+                            // Применяем фильтры через CSS
+                            const filterString = `
+                                brightness(${params.brightness}%)
+                                contrast(${params.contrast}%)
+                                saturate(${params.saturation}%)
+                                ${params.filter === 'grayscale' ? 'grayscale(100%)' : ''}
+                                ${params.filter === 'sepia' ? 'sepia(100%)' : ''}
+                                ${params.filter === 'invert' ? 'invert(100%)' : ''}
+                            `;
+                            slidePreview.style.filter = filterString.trim();
+                            
+                            // Устанавливаем центрирование
+                            slidePreview.style.backgroundPosition = 'center';
+                            slidePreview.style.backgroundRepeat = 'no-repeat';
+                            
+                            // Применяем масштаб через background-size
+                            if (params.scale === 1) {
+                                slidePreview.style.backgroundSize = 'cover';
+                            } else {
+                                // Масштабируем фон относительно размера при 'cover'
+                                slidePreview.style.backgroundSize = `${params.scale * 100}% ${params.scale * 100}%`;
+                            }
+                        }
+                    } else {
+                        const imageUrl = getRandomImage(themeSelect.value);
+                        if (imageUrl) {
+                            bgStyle = `url(${imageUrl})`;
+                            slidePreview.style.backgroundSize = 'cover';
+                            slidePreview.style.backgroundPosition = 'center';
+                            // Сбрасываем фильтры для стандартных изображений
+                            slidePreview.style.filter = 'none';
+                        } else {
+                            bgStyle = '#000';
+                            slidePreview.style.filter = 'none';
+                            slidePreview.style.backgroundSize = 'auto'; // Сбрасываем background-size
                         }
                     }
-                    ctx.putImageData(imageData, 0, 0);
+
+                    slidePreview.style.backgroundImage = bgStyle;
+
+                    const textEl = slidePreview.querySelector('.slide-text');
+                    textEl.textContent = data.text;
+                    textEl.style.fontSize = fontSize;
+                    textEl.style.fontFamily = fontFamily;
+
+                    slidePreview.querySelector('.slide-number').textContent = `${currentSlideIndex + 1}/${slidesData.length}`;
+
+                    dotsContainer.querySelectorAll('.dot').forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentSlideIndex);
+                    });
                 }
 
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                customCroppedImages[currentSlideIndex] = dataUrl;
-                cropModal.style.display = 'none';
-                updateSlide();
-            });
+                function getRandomImage(theme) {
+                    const themeImages = {
+                        nature: [
+                            'https://picsum.photos/id/1/1080/1920',
+                            'https://picsum.photos/id/2/1080/1920',
+                            'https://picsum.photos/id/3/1080/1920',
+                            'https://picsum.photos/id/4/1080/1920',
+                            'https://picsum.photos/id/5/1080/1920',
+                            'https://picsum.photos/id/6/1080/1920',
+                            'https://picsum.photos/id/7/1080/1920',
+                            'https://picsum.photos/id/8/1080/1920',
+                            'https://picsum.photos/id/9/1080/1920',
+                            'https://picsum.photos/id/10/1080/1920'
+                        ],
+                        city: [
+                            'https://picsum.photos/id/26/1080/1920',
+                            'https://picsum.photos/id/30/1080/1920',
+                            'https://picsum.photos/id/34/1080/1920',
+                            'https://picsum.photos/id/42/1080/1920',
+                            'https://picsum.photos/id/50/1080/1920',
+                            'https://picsum.photos/id/55/1080/1920',
+                            'https://picsum.photos/id/60/1080/1920',
+                            'https://picsum.photos/id/65/1080/1920',
+                            'https://picsum.photos/id/70/1080/1920',
+                            'https://picsum.photos/id/75/1080/1920'
+                        ],
+                        sunset: [
+                            'https://picsum.photos/id/20/1080/1920',
+                            'https://picsum.photos/id/21/1080/1920',
+                            'https://picsum.photos/id/22/1080/1920',
+                            'https://picsum.photos/id/23/1080/1920',
+                            'https://picsum.photos/id/24/1080/1920',
+                            'https://picsum.photos/id/25/1080/1920',
+                            'https://picsum.photos/id/26/1080/1920',
+                            'https://picsum.photos/id/27/1080/1920',
+                            'https://picsum.photos/id/28/1080/1920',
+                            'https://picsum.photos/id/29/1080/1920'
+                        ],
+                        abstract: [
+                            'https://picsum.photos/id/1012/1080/1920',
+                            'https://picsum.photos/id/1015/1080/1920',
+                            'https://picsum.photos/id/1020/1080/1920',
+                            'https://picsum.photos/id/1025/1080/1920',
+                            'https://picsum.photos/id/1030/1080/1920',
+                            'https://picsum.photos/id/1035/1080/1920',
+                            'https://picsum.photos/id/1040/1080/1920',
+                            'https://picsum.photos/id/1045/1080/1920',
+                            'https://picsum.photos/id/1050/1080/1920',
+                            'https://picsum.photos/id/1055/1080/1920'
+                        ],
+                        minimal: [
+                            'https://picsum.photos/id/1025/1080/1920',
+                            'https://picsum.photos/id/1039/1080/1920',
+                            'https://picsum.photos/id/1060/1080/1920',
+                            'https://picsum.photos/id/1065/1080/1920',
+                            'https://picsum.photos/id/1070/1080/1920',
+                            'https://picsum.photos/id/1075/1080/1920',
+                            'https://picsum.photos/id/1080/1080/1920',
+                            'https://picsum.photos/id/1085/1080/1920',
+                            'https://picsum.photos/id/1090/1080/1920',
+                            'https://picsum.photos/id/1095/1080/1920'
+                        ]
+                    };
+                    const set = themeImages[theme] || themeImages.nature;
+                    const randomIndex = Math.floor(Math.random() * set.length);
+                    return set[randomIndex];
+                }
 
-            // Основные функции
-            function splitIntoSlides(text) {
-                const sentences = text.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/);
-                const slides = [];
-                let currentSlide = '';
-                const maxWords = 20;
-
-                for (const sentence of sentences) {
-                    const words = sentence.trim().split(' ');
-                    if (words.length + currentSlide.split(' ').length <= maxWords || !currentSlide) {
-                        currentSlide += (currentSlide ? ' ' : '') + sentence.trim();
-                    } else {
-                        slides.push(currentSlide);
-                        currentSlide = sentence.trim();
+                function generateSlides() {
+                    const story = storyInput.value.trim();
+                    if (!story) {
+                        alert('Введите текст!');
+                        return;
                     }
-                }
-                if (currentSlide) slides.push(currentSlide);
-                return slides.length ? slides : [text];
-            }
 
-            function updateSlide() {
-                if (!slidesData.length) return;
-
-                const data = slidesData[currentSlideIndex];
-                const fontSizeMap = {
-                    small: '60px',
-                    medium: '80px',
-                    large: '100px',
-                    xlarge: '120px'
-                };
-                const fontSize = fontSizeMap[fontSizeSelect.value];
-                const fontFamily = fontFamilySelect.value;
-
-                let imageUrl;
-                if (themeSelect.value === 'custom' && customCroppedImages[currentSlideIndex]) {
-                    imageUrl = customCroppedImages[currentSlideIndex];
-                } else {
-                    imageUrl = getRandomImage(themeSelect.value);
-                }
-
-                if (imageUrl) {
-                    slidePreview.style.backgroundImage = `url(${imageUrl})`;
-                    slidePreview.style.backgroundSize = 'cover';
-                    slidePreview.style.backgroundPosition = 'center';
-                    slidePreview.style.backgroundRepeat = 'no-repeat';
-                } else {
-                    slidePreview.style.background = '#000';
-                }
-
-                const textEl = slidePreview.querySelector('.slide-text');
-                textEl.textContent = data.text;
-                textEl.style.fontSize = fontSize;
-                textEl.style.fontFamily = fontFamily;
-
-                const numberEl = slidePreview.querySelector('.slide-number');
-                numberEl.textContent = `${currentSlideIndex + 1}/${slidesData.length}`;
-
-                dotsContainer.querySelectorAll('.dot').forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentSlideIndex);
-                });
-            }
-
-            function getRandomImage(theme) {
-                const themeImages = {
-                    nature: [
-                        'https://picsum.photos/id/1/1080/1920', 'https://picsum.photos/id/2/1080/1920', 'https://picsum.photos/id/3/1080/1920', 'https://picsum.photos/id/4/1080/1920', 'https://picsum.photos/id/5/1080/1920',
-                        'https://picsum.photos/id/6/1080/1920', 'https://picsum.photos/id/7/1080/1920', 'https://picsum.photos/id/8/1080/1920', 'https://picsum.photos/id/9/1080/1920', 'https://picsum.photos/id/10/1080/1920',
-                        'https://picsum.photos/id/11/1080/1920', 'https://picsum.photos/id/12/1080/1920', 'https://picsum.photos/id/13/1080/1920', 'https://picsum.photos/id/14/1080/1920', 'https://picsum.photos/id/15/1080/1920',
-                        'https://picsum.photos/id/16/1080/1920', 'https://picsum.photos/id/17/1080/1920', 'https://picsum.photos/id/18/1080/1920', 'https://picsum.photos/id/19/1080/1920', 'https://picsum.photos/id/20/1080/1920',
-                        'https://picsum.photos/id/21/1080/1920', 'https://picsum.photos/id/22/1080/1920', 'https://picsum.photos/id/23/1080/1920', 'https://picsum.photos/id/24/1080/1920', 'https://picsum.photos/id/25/1080/1920',
-                        'https://picsum.photos/id/26/1080/1920', 'https://picsum.photos/id/27/1080/1920', 'https://picsum.photos/id/28/1080/1920', 'https://picsum.photos/id/29/1080/1920', 'https://picsum.photos/id/30/1080/1920',
-                        'https://picsum.photos/id/31/1080/1920', 'https://picsum.photos/id/32/1080/1920', 'https://picsum.photos/id/33/1080/1920', 'https://picsum.photos/id/34/1080/1920', 'https://picsum.photos/id/35/1080/1920',
-                        'https://picsum.photos/id/36/1080/1920', 'https://picsum.photos/id/37/1080/1920', 'https://picsum.photos/id/38/1080/1920', 'https://picsum.photos/id/39/1080/1920', 'https://picsum.photos/id/40/1080/1920',
-                        'https://picsum.photos/id/41/1080/1920', 'https://picsum.photos/id/42/1080/1920', 'https://picsum.photos/id/43/1080/1920', 'https://picsum.photos/id/44/1080/1920', 'https://picsum.photos/id/45/1080/1920',
-                        'https://picsum.photos/id/46/1080/1920', 'https://picsum.photos/id/47/1080/1920', 'https://picsum.photos/id/48/1080/1920', 'https://picsum.photos/id/49/1080/1920', 'https://picsum.photos/id/50/1080/1920'
-                    ],
-                    city: [
-                        'https://picsum.photos/id/51/1080/1920', 'https://picsum.photos/id/52/1080/1920', 'https://picsum.photos/id/53/1080/1920', 'https://picsum.photos/id/54/1080/1920', 'https://picsum.photos/id/55/1080/1920',
-                        'https://picsum.photos/id/56/1080/1920', 'https://picsum.photos/id/57/1080/1920', 'https://picsum.photos/id/58/1080/1920', 'https://picsum.photos/id/59/1080/1920', 'https://picsum.photos/id/60/1080/1920',
-                        'https://picsum.photos/id/61/1080/1920', 'https://picsum.photos/id/62/1080/1920', 'https://picsum.photos/id/63/1080/1920', 'https://picsum.photos/id/64/1080/1920', 'https://picsum.photos/id/65/1080/1920',
-                        'https://picsum.photos/id/66/1080/1920', 'https://picsum.photos/id/67/1080/1920', 'https://picsum.photos/id/68/1080/1920', 'https://picsum.photos/id/69/1080/1920', 'https://picsum.photos/id/70/1080/1920',
-                        'https://picsum.photos/id/71/1080/1920', 'https://picsum.photos/id/72/1080/1920', 'https://picsum.photos/id/73/1080/1920', 'https://picsum.photos/id/74/1080/1920', 'https://picsum.photos/id/75/1080/1920',
-                        'https://picsum.photos/id/76/1080/1920', 'https://picsum.photos/id/77/1080/1920', 'https://picsum.photos/id/78/1080/1920', 'https://picsum.photos/id/79/1080/1920', 'https://picsum.photos/id/80/1080/1920',
-                        'https://picsum.photos/id/81/1080/1920', 'https://picsum.photos/id/82/1080/1920', 'https://picsum.photos/id/83/1080/1920', 'https://picsum.photos/id/84/1080/1920', 'https://picsum.photos/id/85/1080/1920',
-                        'https://picsum.photos/id/86/1080/1920', 'https://picsum.photos/id/87/1080/1920', 'https://picsum.photos/id/88/1080/1920', 'https://picsum.photos/id/89/1080/1920', 'https://picsum.photos/id/90/1080/1920',
-                        'https://picsum.photos/id/91/1080/1920', 'https://picsum.photos/id/92/1080/1920', 'https://picsum.photos/id/93/1080/1920', 'https://picsum.photos/id/94/1080/1920', 'https://picsum.photos/id/95/1080/1920',
-                        'https://picsum.photos/id/96/1080/1920', 'https://picsum.photos/id/97/1080/1920', 'https://picsum.photos/id/98/1080/1920', 'https://picsum.photos/id/99/1080/1920', 'https://picsum.photos/id/100/1080/1920'
-                    ],
-                    sunset: [
-                        'https://picsum.photos/id/20/1080/1920', 'https://picsum.photos/id/21/1080/1920', 'https://picsum.photos/id/22/1080/1920', 'https://picsum.photos/id/23/1080/1920', 'https://picsum.photos/id/24/1080/1920',
-                        'https://picsum.photos/id/25/1080/1920', 'https://picsum.photos/id/26/1080/1920', 'https://picsum.photos/id/27/1080/1920', 'https://picsum.photos/id/28/1080/1920', 'https://picsum.photos/id/29/1080/1920',
-                        'https://picsum.photos/id/31/1080/1920', 'https://picsum.photos/id/32/1080/1920', 'https://picsum.photos/id/33/1080/1920', 'https://picsum.photos/id/35/1080/1920', 'https://picsum.photos/id/36/1080/1920',
-                        'https://picsum.photos/id/37/1080/1920', 'https://picsum.photos/id/38/1080/1920', 'https://picsum.photos/id/39/1080/1920', 'https://picsum.photos/id/40/1080/1920', 'https://picsum.photos/id/41/1080/1920',
-                        'https://picsum.photos/id/42/1080/1920', 'https://picsum.photos/id/43/1080/1920', 'https://picsum.photos/id/44/1080/1920', 'https://picsum.photos/id/45/1080/1920', 'https://picsum.photos/id/46/1080/1920',
-                        'https://picsum.photos/id/47/1080/1920', 'https://picsum.photos/id/48/1080/1920', 'https://picsum.photos/id/49/1080/1920', 'https://picsum.photos/id/50/1080/1920', 'https://picsum.photos/id/51/1080/1920',
-                        'https://picsum.photos/id/52/1080/1920', 'https://picsum.photos/id/53/1080/1920', 'https://picsum.photos/id/54/1080/1920', 'https://picsum.photos/id/55/1080/1920', 'https://picsum.photos/id/56/1080/1920',
-                        'https://picsum.photos/id/57/1080/1920', 'https://picsum.photos/id/58/1080/1920', 'https://picsum.photos/id/59/1080/1920', 'https://picsum.photos/id/60/1080/1920', 'https://picsum.photos/id/61/1080/1920',
-                        'https://picsum.photos/id/62/1080/1920', 'https://picsum.photos/id/63/1080/1920', 'https://picsum.photos/id/64/1080/1920', 'https://picsum.photos/id/65/1080/1920', 'https://picsum.photos/id/66/1080/1920',
-                        'https://picsum.photos/id/67/1080/1920', 'https://picsum.photos/id/68/1080/1920', 'https://picsum.photos/id/69/1080/1920', 'https://picsum.photos/id/70/1080/1920', 'https://picsum.photos/id/71/1080/1920',
-                        'https://picsum.photos/id/72/1080/1920'
-                    ],
-                    abstract: [
-                        'https://picsum.photos/id/1012/1080/1920', 'https://picsum.photos/id/1015/1080/1920', 'https://picsum.photos/id/1020/1080/1920', 'https://picsum.photos/id/1025/1080/1920', 'https://picsum.photos/id/1030/1080/1920',
-                        'https://picsum.photos/id/1035/1080/1920', 'https://picsum.photos/id/1040/1080/1920', 'https://picsum.photos/id/1045/1080/1920', 'https://picsum.photos/id/1050/1080/1920', 'https://picsum.photos/id/1055/1080/1920',
-                        'https://picsum.photos/id/1060/1080/1920', 'https://picsum.photos/id/1065/1080/1920', 'https://picsum.photos/id/1070/1080/1920', 'https://picsum.photos/id/1075/1080/1920', 'https://picsum.photos/id/1080/1080/1920',
-                        'https://picsum.photos/id/1085/1080/1920', 'https://picsum.photos/id/1090/1080/1920', 'https://picsum.photos/id/1095/1080/1920', 'https://picsum.photos/id/1100/1080/1920', 'https://picsum.photos/id/1105/1080/1920',
-                        'https://picsum.photos/id/1110/1080/1920', 'https://picsum.photos/id/1115/1080/1920', 'https://picsum.photos/id/1120/1080/1920', 'https://picsum.photos/id/1125/1080/1920', 'https://picsum.photos/id/1130/1080/1920',
-                        'https://picsum.photos/id/1135/1080/1920', 'https://picsum.photos/id/1140/1080/1920', 'https://picsum.photos/id/1145/1080/1920', 'https://picsum.photos/id/1150/1080/1920', 'https://picsum.photos/id/1155/1080/1920',
-                        'https://picsum.photos/id/1160/1080/1920', 'https://picsum.photos/id/1165/1080/1920', 'https://picsum.photos/id/1170/1080/1920', 'https://picsum.photos/id/1175/1080/1920', 'https://picsum.photos/id/1180/1080/1920',
-                        'https://picsum.photos/id/1185/1080/1920', 'https://picsum.photos/id/1190/1080/1920', 'https://picsum.photos/id/1195/1080/1920', 'https://picsum.photos/id/1200/1080/1920', 'https://picsum.photos/id/1205/1080/1920',
-                        'https://picsum.photos/id/1210/1080/1920', 'https://picsum.photos/id/1215/1080/1920', 'https://picsum.photos/id/1220/1080/1920', 'https://picsum.photos/id/1225/1080/1920', 'https://picsum.photos/id/1230/1080/1920',
-                        'https://picsum.photos/id/1235/1080/1920', 'https://picsum.photos/id/1240/1080/1920', 'https://picsum.photos/id/1245/1080/1920', 'https://picsum.photos/id/1250/1080/1920', 'https://picsum.photos/id/1255/1080/1920',
-                        'https://picsum.photos/id/1260/1080/1920'
-                    ],
-                    minimal: [
-                        'https://picsum.photos/id/1025/1080/1920', 'https://picsum.photos/id/1039/1080/1920', 'https://picsum.photos/id/1060/1080/1920', 'https://picsum.photos/id/1065/1080/1920', 'https://picsum.photos/id/1070/1080/1920',
-                        'https://picsum.photos/id/1075/1080/1920', 'https://picsum.photos/id/1080/1080/1920', 'https://picsum.photos/id/1085/1080/1920', 'https://picsum.photos/id/1090/1080/1920', 'https://picsum.photos/id/1095/1080/1920',
-                        'https://picsum.photos/id/1110/1080/1920', 'https://picsum.photos/id/1115/1080/1920', 'https://picsum.photos/id/1120/1080/1920', 'https://picsum.photos/id/1125/1080/1920', 'https://picsum.photos/id/1130/1080/1920',
-                        'https://picsum.photos/id/1135/1080/1920', 'https://picsum.photos/id/1140/1080/1920', 'https://picsum.photos/id/1145/1080/1920', 'https://picsum.photos/id/1150/1080/1920', 'https://picsum.photos/id/1155/1080/1920',
-                        'https://picsum.photos/id/1160/1080/1920', 'https://picsum.photos/id/1165/1080/1920', 'https://picsum.photos/id/1170/1080/1920', 'https://picsum.photos/id/1175/1080/1920', 'https://picsum.photos/id/1180/1080/1920',
-                        'https://picsum.photos/id/1185/1080/1920', 'https://picsum.photos/id/1190/1080/1920', 'https://picsum.photos/id/1195/1080/1920', 'https://picsum.photos/id/1200/1080/1920', 'https://picsum.photos/id/1205/1080/1920',
-                        'https://picsum.photos/id/1210/1080/1920', 'https://picsum.photos/id/1215/1080/1920', 'https://picsum.photos/id/1220/1080/1920', 'https://picsum.photos/id/1225/1080/1920', 'https://picsum.photos/id/1230/1080/1920',
-                        'https://picsum.photos/id/1235/1080/1920', 'https://picsum.photos/id/1240/1080/1920', 'https://picsum.photos/id/1245/1080/1920', 'https://picsum.photos/id/1250/1080/1920', 'https://picsum.photos/id/1255/1080/1920',
-                        'https://picsum.photos/id/1260/1080/1920', 'https://picsum.photos/id/1265/1080/1920', 'https://picsum.photos/id/1270/1080/1920', 'https://picsum.photos/id/1275/1080/1920', 'https://picsum.photos/id/1280/1080/1920',
-                        'https://picsum.photos/id/1285/1080/1920', 'https://picsum.photos/id/1290/1080/1920', 'https://picsum.photos/id/1295/1080/1920', 'https://picsum.photos/id/1300/1080/1920', 'https://picsum.photos/id/1305/1080/1920',
-                        'https://picsum.photos/id/1310/1080/1920'
-                    ]
-                };
-                const set = themeImages[theme] || themeImages.nature;
-                const randomIndex = Math.floor(Math.random() * set.length);
-                return set[randomIndex];
-            }
-
-            function generateSlides() {
-                const story = storyInput.value.trim();
-                if (!story) {
-                    alert('Введите текст!');
-                    return;
-                }
-
-                slidesData = splitIntoSlides(story).map((text, i) => ({ text, i }));
-                dotsContainer.innerHTML = '';
-                slidesData.forEach((_, i) => {
-                    const dot = document.createElement('div');
-                    dot.className = i === 0 ? 'dot active' : 'dot';
-                    dot.onclick = () => goToSlide(i);
-                    dotsContainer.appendChild(dot);
-                });
-
-                currentSlideIndex = 0;
-                updateSlide();
-            }
-
-            function goToSlide(index) {
-                if (index >= 0 && index < slidesData.length) {
-                    currentSlideIndex = index;
-                    updateSlide();
-                }
-            }
-
-            // Скачивание — без номера
-            downloadBtn.addEventListener('click', async function() {
-                if (typeof html2canvas === 'undefined') {
-                    alert('html2canvas не загружен.');
-                    return;
-                }
-                try {
-                    const numberEl = slidePreview.querySelector('.slide-number');
-                    numberEl.style.display = 'none';
-
-                    const canvas = await html2canvas(slidePreview, {
-                        width: 1080,
-                        height: 1920,
-                        scale: 1,
-                        useCORS: true,
-                        backgroundColor: null
+                    // *** ИЗМЕНЕНО: Создаем слайды на основе разбивки по абзацам ***
+                    slidesData = splitIntoSlides(story).map((text, i) => ({ text, i }));
+                    dotsContainer.innerHTML = '';
+                    slidesData.forEach((_, i) => {
+                        const dot = document.createElement('div');
+                        dot.className = i === 0 ? 'dot active' : 'dot';
+                        dot.onclick = () => goToSlide(i);
+                        dotsContainer.appendChild(dot);
                     });
 
-                    numberEl.style.display = 'flex';
-
-                    const link = document.createElement('a');
-                    link.download = `slide-${currentSlideIndex + 1}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } catch (e) {
-                    alert('Ошибка: ' + e.message);
-                }
-            });
-
-            downloadAllBtn.addEventListener('click', async function() {
-                if (typeof html2canvas === 'undefined') {
-                    alert('html2canvas не загружен.');
-                    return;
-                }
-                if (!slidesData.length) {
-                    alert('Сначала создайте слайды!');
-                    return;
+                    currentSlideIndex = 0;
+                    updateSlide();
                 }
 
-                progressContainer.style.display = 'block';
-                progressFill.style.width = '0%';
-                progressText.textContent = `Создание... 0/${slidesData.length}`;
+                function goToSlide(index) {
+                    if (index >= 0 && index < slidesData.length) {
+                        currentSlideIndex = index;
+                        updateSlide();
+                    }
+                }
 
-                const numberEl = slidePreview.querySelector('.slide-number');
-
-                for (let i = 0; i < slidesData.length; i++) {
-                    goToSlide(i);
-                    await new Promise(resolve => setTimeout(resolve, 300));
-
+                // Скачивание (Исправлено для HD качества и центрирования текста)
+                downloadBtn.addEventListener('click', async function() {
+                    if (typeof html2canvas === 'undefined') {
+                        alert('html2canvas не загружен.');
+                        return;
+                    }
                     try {
-                        numberEl.style.display = 'none';
-                        const canvas = await html2canvas(slidePreview, {
+                        // Создаем временный элемент для рендеринга
+                        const tempDiv = document.createElement('div');
+                        tempDiv.style.position = 'absolute';
+                        tempDiv.style.top = '-9999px';
+                        tempDiv.style.left = '-9999px';
+                        tempDiv.style.width = '1080px';
+                        tempDiv.style.height = '1920px';
+                        tempDiv.style.overflow = 'hidden';
+                        tempDiv.style.backgroundImage = slidePreview.style.backgroundImage;
+                        tempDiv.style.backgroundSize = slidePreview.style.backgroundSize;
+                        tempDiv.style.backgroundPosition = slidePreview.style.backgroundPosition;
+                        tempDiv.style.backgroundRepeat = 'no-repeat';
+                        tempDiv.style.filter = slidePreview.style.filter;
+
+                        // Клонируем содержимое слайда
+                        const backdropClone = slidePreview.querySelector('.backdrop').cloneNode(true);
+                        const textClone = slidePreview.querySelector('.slide-text').cloneNode(true);
+                        const numberClone = slidePreview.querySelector('.slide-number').cloneNode(true);
+
+                        // *** НОВОЕ: Копируем стили центрирования текста ***
+                        const originalTextEl = slidePreview.querySelector('.slide-text');
+                        textClone.style.display = originalTextEl.style.display;
+                        textClone.style.alignItems = originalTextEl.style.alignItems;
+                        textClone.style.justifyContent = originalTextEl.style.justifyContent;
+                        // *** КОНЕЦ НОВОГО БЛОКА ***
+
+                        tempDiv.appendChild(backdropClone);
+                        tempDiv.appendChild(textClone);
+                        tempDiv.appendChild(numberClone);
+
+                        // Добавляем временный элемент в DOM
+                        document.body.appendChild(tempDiv);
+
+                        // Рендерим canvas с высоким разрешением
+                        const canvas = await html2canvas(tempDiv, {
                             width: 1080,
                             height: 1920,
-                            scale: 1,
+                            scale: 2, // Увеличиваем масштаб для лучшего качества
                             useCORS: true,
                             backgroundColor: null
                         });
-                        numberEl.style.display = 'flex';
 
-                        const imgData = canvas.toDataURL('image/png');
+                        // Удаляем временный элемент
+                        document.body.removeChild(tempDiv);
+
+                        // Создаем ссылку для скачивания
                         const link = document.createElement('a');
-                        link.download = `slide-${i + 1}.png`;
-                        link.href = imgData;
+                        link.download = `slide-${currentSlideIndex + 1}.png`;
+                        link.href = canvas.toDataURL('image/png');
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-
-                        const progress = Math.round(((i + 1) / slidesData.length) * 100);
-                        progressFill.style.width = progress + '%';
-                        progressText.textContent = `Создание... ${i + 1}/${slidesData.length}`;
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    } catch (error) {
-                        alert(`Ошибка при слайде ${i + 1}`);
+                    } catch (e) {
+                        alert('Ошибка: ' + e.message);
                     }
-                }
-
-                setTimeout(() => progressContainer.style.display = 'none', 1500);
-            });
-
-            downloadPdfBtn.addEventListener('click', async function() {
-                if (typeof window.jspdf === 'undefined') {
-                    alert('jspdf не загружен.');
-                    return;
-                }
-                if (!slidesData.length) {
-                    alert('Сначала создайте слайды!');
-                    return;
-                }
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'px',
-                    format: [1080, 1920]
                 });
 
-                progressContainer.style.display = 'block';
-                progressFill.style.width = '0%';
-                progressText.textContent = `PDF... 0/${slidesData.length}`;
-
-                const numberEl = slidePreview.querySelector('.slide-number');
-
-                for (let i = 0; i < slidesData.length; i++) {
-                    goToSlide(i);
-                    await new Promise(resolve => setTimeout(resolve, 300));
-
-                    try {
-                        numberEl.style.display = 'none';
-                        const canvas = await html2canvas(slidePreview, {
-                            width: 1080,
-                            height: 1920,
-                            scale: 1,
-                            useCORS: true,
-                            backgroundColor: null
-                        });
-                        numberEl.style.display = 'flex';
-
-                        const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                        if (i > 0) pdf.addPage();
-                        pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1920);
-
-                        const progress = Math.round(((i + 1) / slidesData.length) * 100);
-                        progressFill.style.width = progress + '%';
-                        progressText.textContent = `PDF... ${i + 1}/${slidesData.length}`;
-                    } catch (error) {
-                        alert(`Ошибка при создании PDF (слайд ${i + 1})`);
+                downloadAllBtn.addEventListener('click', async function() {
+                    if (typeof html2canvas === 'undefined') {
+                        alert('html2canvas не загружен.');
+                        return;
                     }
-                }
+                    if (!slidesData.length) {
+                        alert('Сначала создайте слайды!');
+                        return;
+                    }
 
-                pdf.save('instagram-carousel.pdf');
-                progressContainer.style.display = 'none';
-            });
+                    progressContainer.style.display = 'block';
+                    progressFill.style.width = '0%';
+                    progressText.textContent = `Создание... 0/${slidesData.length}`;
 
-            // Обработчики
-            generateBtn.addEventListener('click', generateSlides);
-            prevBtn.addEventListener('click', () => goToSlide(currentSlideIndex - 1));
-            nextBtn.addEventListener('click', () => goToSlide(currentSlideIndex + 1));
-            fontFamilySelect.addEventListener('change', updateSlide);
-            fontSizeSelect.addEventListener('change', updateSlide);
+                    for (let i = 0; i < slidesData.length; i++) {
+                        goToSlide(i);
+                        await new Promise(resolve => setTimeout(resolve, 300));
 
-            // Переключение темы
-            themeToggle.addEventListener('click', () => {
-                const isLight = document.body.classList.toggle('light-mode');
-                themeToggle.textContent = isLight ? '🌙 Тёмная тема' : '☀️ Светлая тема';
-            });
+                        try {
+                            // Создаем временный элемент для рендеринга
+                            const tempDiv = document.createElement('div');
+                            tempDiv.style.position = 'absolute';
+                            tempDiv.style.top = '-9999px';
+                            tempDiv.style.left = '-9999px';
+                            tempDiv.style.width = '1080px';
+                            tempDiv.style.height = '1920px';
+                            tempDiv.style.overflow = 'hidden';
+                            tempDiv.style.backgroundImage = slidePreview.style.backgroundImage;
+                            tempDiv.style.backgroundSize = slidePreview.style.backgroundSize;
+                            tempDiv.style.backgroundPosition = slidePreview.style.backgroundPosition;
+                            tempDiv.style.backgroundRepeat = 'no-repeat';
+                            tempDiv.style.filter = slidePreview.style.filter;
 
-            // Инициализация
-            generateSlides();
-        }
+                            const backdropClone = slidePreview.querySelector('.backdrop').cloneNode(true);
+                            const textClone = slidePreview.querySelector('.slide-text').cloneNode(true);
+                            const numberClone = slidePreview.querySelector('.slide-number').cloneNode(true);
+
+                            // *** НОВОЕ: Копируем стили центрирования текста ***
+                            const originalTextEl = slidePreview.querySelector('.slide-text');
+                            textClone.style.display = originalTextEl.style.display;
+                            textClone.style.alignItems = originalTextEl.style.alignItems;
+                            textClone.style.justifyContent = originalTextEl.style.justifyContent;
+                            // *** КОНЕЦ НОВОГО БЛОКА ***
+
+                            tempDiv.appendChild(backdropClone);
+                            tempDiv.appendChild(textClone);
+                            tempDiv.appendChild(numberClone);
+
+                            document.body.appendChild(tempDiv);
+
+                            const canvas = await html2canvas(tempDiv, {
+                                width: 1080,
+                                height: 1920,
+                                scale: 2,
+                                useCORS: true,
+                                backgroundColor: null
+                            });
+
+                            document.body.removeChild(tempDiv);
+
+                            const imgData = canvas.toDataURL('image/png');
+                            const link = document.createElement('a');
+                            link.download = `slide-${i + 1}.png`;
+                            link.href = imgData;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
+                            const progress = Math.round(((i + 1) / slidesData.length) * 100);
+                            progressFill.style.width = progress + '%';
+                            progressText.textContent = `Создание... ${i + 1}/${slidesData.length}`;
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        } catch (error) {
+                            alert(`Ошибка при слайде ${i + 1}`);
+                        }
+                    }
+
+                    setTimeout(() => progressContainer.style.display = 'none', 1500);
+                });
+
+                downloadPdfBtn.addEventListener('click', async function() {
+                    if (typeof window.jspdf === 'undefined') {
+                        alert('jspdf не загружен.');
+                        return;
+                    }
+                    if (!slidesData.length) {
+                        alert('Сначала создайте слайды!');
+                        return;
+                    }
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'px',
+                        format: [1080, 1920]
+                    });
+
+                    progressContainer.style.display = 'block';
+                    progressFill.style.width = '0%';
+                    progressText.textContent = `PDF... 0/${slidesData.length}`;
+
+                    for (let i = 0; i < slidesData.length; i++) {
+                        goToSlide(i);
+                        await new Promise(resolve => setTimeout(resolve, 300));
+
+                        try {
+                            // Создаем временный элемент для рендеринга
+                            const tempDiv = document.createElement('div');
+                            tempDiv.style.position = 'absolute';
+                            tempDiv.style.top = '-9999px';
+                            tempDiv.style.left = '-9999px';
+                            tempDiv.style.width = '1080px';
+                            tempDiv.style.height = '1920px';
+                            tempDiv.style.overflow = 'hidden';
+                            tempDiv.style.backgroundImage = slidePreview.style.backgroundImage;
+                            tempDiv.style.backgroundSize = slidePreview.style.backgroundSize;
+                            tempDiv.style.backgroundPosition = slidePreview.style.backgroundPosition;
+                            tempDiv.style.backgroundRepeat = 'no-repeat';
+                            tempDiv.style.filter = slidePreview.style.filter;
+
+                            const backdropClone = slidePreview.querySelector('.backdrop').cloneNode(true);
+                            const textClone = slidePreview.querySelector('.slide-text').cloneNode(true);
+                            const numberClone = slidePreview.querySelector('.slide-number').cloneNode(true);
+
+                            // *** НОВОЕ: Копируем стили центрирования текста ***
+                            const originalTextEl = slidePreview.querySelector('.slide-text');
+                            textClone.style.display = originalTextEl.style.display;
+                            textClone.style.alignItems = originalTextEl.style.alignItems;
+                            textClone.style.justifyContent = originalTextEl.style.justifyContent;
+                            // *** КОНЕЦ НОВОГО БЛОКА ***
+
+                            tempDiv.appendChild(backdropClone);
+                            tempDiv.appendChild(textClone);
+                            tempDiv.appendChild(numberClone);
+
+                            document.body.appendChild(tempDiv);
+
+                            const canvas = await html2canvas(tempDiv, {
+                                width: 1080,
+                                height: 1920,
+                                scale: 2,
+                                useCORS: true,
+                                backgroundColor: null
+                            });
+
+                            document.body.removeChild(tempDiv);
+
+                            const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                            if (i > 0) pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1920);
+
+                            const progress = Math.round(((i + 1) / slidesData.length) * 100);
+                            progressFill.style.width = progress + '%';
+                            progressText.textContent = `PDF... ${i + 1}/${slidesData.length}`;
+                        } catch (error) {
+                            alert(`Ошибка при создании PDF (слайд ${i + 1})`);
+                        }
+                    }
+
+                    pdf.save('instagram-carousel.pdf');
+                    progressContainer.style.display = 'none';
+                });
+
+                // Обработчики
+                generateBtn.addEventListener('click', generateSlides);
+                prevBtn.addEventListener('click', () => goToSlide(currentSlideIndex - 1));
+                nextBtn.addEventListener('click', () => goToSlide(currentSlideIndex + 1));
+                fontFamilySelect.addEventListener('change', updateSlide);
+                fontSizeSelect.addEventListener('change', updateSlide);
+
+                // Переключение темы
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-mode');
+                    const isLightMode = document.body.classList.contains('light-mode');
+                    themeToggle.textContent = isLightMode ? '🌙 Тёмная тема' : '☀️ Светлая тема';
+                });
+
+                // Новая кнопка: Обновить фразу
+                refreshQuoteBtn.addEventListener('click', function() {
+                    const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+                    storyInput.value = randomQuote;
+                });
+
+                // Инициализация
+                generateSlides();
+            }
+        });
     </script>
 </body>
 </html>
